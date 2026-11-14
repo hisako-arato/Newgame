@@ -29,6 +29,12 @@
       case 'flash': await ui.flash(); break;
       case 'wait': await G.util.sleep(c[1]); break;
       case 'rest': G.menu.rest(); break;
+      case 'equip': {
+        // 武器・防具を受け取って、その場で持ち替える
+        var eq = G.data.items[c[1]];
+        if (eq.type === 'weapon') s.weapon = c[1]; else s.armor = c[1];
+        ui.hud(); break;
+      }
       case 'join': s.flags[c[1]] = true; G.fullHeal(); ui.hud(); break;
       case 'dream': {
         // はじめの数回だけ、過去の断片を順に見せる

@@ -231,5 +231,11 @@ G.data.monsters = {
       '....aaab.baaa...',
       '...bbbbb.bbbbb..'
     ]
-  }
+  },
+
+  // ---- 地上の軍（第三章）。person は歩く画面と同じ人の絵を使う ----
+  hei:   { name: 'ガルド兵', person: 'guard', hp: 120, atk: 38, def: 14, exp: 85, gold: 40, charge: 0.15, drops: [{ item: 'kizu', rate: 0.5 }] },
+  madou: { name: '魔導兵',   person: 'mage',  hp: 100, atk: 44, def: 8,  exp: 95, gold: 50, drops: [{ item: 'kitsuke', rate: 0.5 }] },
+  liese: { name: '騎士リーゼ', person: 'liese', hp: 520, atk: 46, def: 18, exp: 420, gold: 0, charge: 0.3, boss: true, drops: [] },
+  ou:    { name: 'ガルド王', person: 'king', hp: 760, atk: 50, def: 20, exp: 0, gold: 0, weak: 'thunder', charge: 0.3, boss: true, drops: [] }
 };

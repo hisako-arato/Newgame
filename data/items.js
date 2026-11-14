@@ -10,6 +10,7 @@ G.data.items = {
   rusty:   { name: 'さびた剣',   type: 'weapon', atk: 2 },
   iron:    { name: '鉄の剣',     type: 'weapon', atk: 8,  price: 180 },
   silver:  { name: '銀の剣',     type: 'weapon', atk: 14, price: 480 },
+  kishi:   { name: '騎士の剣',   type: 'weapon', atk: 18 },
   coat:    { name: '古びた外套', type: 'armor', def: 1 },
   leather: { name: '革の胸当て', type: 'armor', def: 5,  price: 150 },
   mail:    { name: '鎖かたびら', type: 'armor', def: 10, price: 420 }

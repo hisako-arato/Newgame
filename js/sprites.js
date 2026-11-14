@@ -9,7 +9,7 @@
     'S': { walk: false }, 'a': { walk: false }, 'q': { walk: false }, 'T': { walk: false }, 'x': { walk: false },
     'g': { walk: true }, 'p': { walk: true }, 'f': { walk: true }, 'b': { walk: true }, 'D': { walk: true },
     'o': { walk: true }, 's': { walk: true }, 'U': { walk: true }, 'M': { walk: true }, 'c': { walk: true },
-    'l': { walk: true }, 'e': { walk: true }
+    'l': { walk: true }, 'e': { walk: true }, 'A': { walk: false }
   };
 
   // 同じマスはいつも同じ模様になるよう、座標から乱数を作る
@@ -127,6 +127,11 @@
         specks(c, ox, oy, tx, ty, ['#c2c8d6', '#eef1f7', '#b4bccc'], 8);
         if (rnd(tx, ty, 5) > 0.7) rect(c, '#a9b2c4', ox + 3, oy + 8, 9, 1);
         break;
+      case 'A':
+        // 祭壇。白い石の台に、青く光る小瓶
+        stone(c, ox, oy, '#5d5a6a', '#4b4857');
+        rect(c, '#d8dde8', ox + 1, oy + 7, 14, 8); rect(c, '#f4f6fb', ox, oy + 5, 16, 3); rect(c, '#a9b2c4', ox + 1, oy + 14, 14, 1);
+        rect(c, '#7ae0ff', ox + 7, oy + 1, 2, 4); rect(c, '#e9fbff', ox + 7, oy, 2, 1); break;
       case 'e':
         // となりの場所へ続く通り道。雲の床に青い印
         drawTile(c, 'l', ox, oy, tx, ty);
@@ -173,6 +178,7 @@
     adventurer:  { H: '#b0402a', S: '#e8c4a0', E: '#222', C: '#4a6a4a', D: '#3a3a2a', B: '#222' },
     adventurer2: { H: '#d8d8d8', S: '#c9a080', E: '#222', C: '#5a4a6a', D: '#3a3040', B: '#222' },
     king:        { H: '#e8e8e8', S: '#e0b896', E: '#222', C: '#a02f3a', D: '#6b1f28', B: '#3a2a20', K: '#f0c84a' },
+    mage:        { H: '#3a2a4a', S: '#e0b896', E: '#222', C: '#6a4a9a', D: '#4a3470', B: '#222', K: '#8a6ac4', L: '#6a4a9a' },
     amelia:      { H: '#bfe0f4', S: '#fbe6d6', E: '#4a7ac4', C: '#f4f6fb', D: '#d8dde8', B: '#c2c8d6', L: '#bfe0f4' }
   };
   // 物のドット絵
@@ -246,7 +252,8 @@
     drawMonster: function (c, id, sc) {
       var m = G.data.monsters[id];
       c.clearRect(0, 0, c.canvas.width, c.canvas.height);
-      paint(c, m.art, m.pal, 0, 0, sc);
+      if (m.person) paint(c, humanArt('down', 0), PEOPLE[m.person], 0, 0, sc);
+      else paint(c, m.art, m.pal, 0, 0, sc);
     }
   };
 })();

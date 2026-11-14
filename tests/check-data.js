@@ -7,7 +7,7 @@ var ctx = vm.createContext({ console: console, Math: Math });
 });
 var G = vm.runInContext('G', ctx), D = G.data, S = G.sprites;
 var KNOWN = ['say', 'nar', 'choice', 'if', 'call', 'flag', 'goal', 'give', 'take', 'gold', 'warp', 'fade', 'flash', 'wait',
-  'rest', 'join', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
+  'rest', 'join', 'equip', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
 var fails = 0;
 function test(name, fn) {
   var errs = [];
@@ -71,7 +71,7 @@ test('命令はすべて知っているもので、名前の参照先がある',
     if (c[0] === '?missing') return bad(where + ' が呼ぶ「' + c[1] + '」がない');
     if (KNOWN.indexOf(c[0]) < 0) return bad(where + ' に知らない命令「' + c[0] + '」');
     if (c[0] === 'say' && (typeof c[1] !== 'string' || typeof c[2] !== 'string')) bad(where + ' の say は [名前, 台詞]');
-    if ((c[0] === 'give' || c[0] === 'take') && !D.items[c[1]]) bad(where + ' の道具「' + c[1] + '」がない');
+    if ((c[0] === 'give' || c[0] === 'take' || c[0] === 'equip') && !D.items[c[1]]) bad(where + ' の道具「' + c[1] + '」がない');
     if (c[0] === 'battle' && !D.monsters[c[1]]) bad(where + ' の魔物「' + c[1] + '」がない');
     if (c[0] === 'shop' && !D.shops[c[1]]) bad(where + ' の店「' + c[1] + '」がない');
   });
@@ -100,8 +100,10 @@ test('すべての地図に、最初の隠れ家からたどり着ける', funct
 test('魔物の絵は16×16で、色がそろっている。落とし物・出現表の名前も正しい', function (bad) {
   Object.keys(D.monsters).forEach(function (id) {
     var m = D.monsters[id];
-    if (m.art.length !== 16) bad(id + ' の絵が ' + m.art.length + ' 行');
-    m.art.forEach(function (r, y) {
+    // 人の姿の相手は、歩く画面と同じ絵を使う
+    if (m.person) { if (!S.PEOPLE[m.person]) bad(id + ' の人の絵「' + m.person + '」がない'); }
+    else if (m.art.length !== 16) bad(id + ' の絵が ' + m.art.length + ' 行');
+    (m.art || []).forEach(function (r, y) {
       if (r.length !== 16) bad(id + ' の絵の ' + y + ' 行目が ' + r.length + ' 文字');
       for (var x = 0; x < r.length; x++) if (r.charAt(x) !== '.' && !m.pal[r.charAt(x)]) bad(id + ' の絵に色のない文字「' + r.charAt(x) + '」');
     });

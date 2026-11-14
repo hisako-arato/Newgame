@@ -1,5 +1,7 @@
 // 地図。文字の意味は js/sprites.js の TILES を参照。
 // ev の種類：sprite 付き＝人や物（通れない）／obj＝地形そのものを調べる／step＝踏むと起きる／gather＝採集
+// 戦のあいだだけ出る人。W('!s1')＝戦が始まっていて、まだ s1 が立っていない
+function W(c) { return function (s) { return !!s.flags.war && !s.flags[c.slice(1)]; }; }
 G.data.maps = {
   lair: {
     name: '地下の隠れ家', dark: 0,
@@ -178,7 +180,7 @@ G.data.maps = {
       ' lxlllllxl ',
       ' llllcllll ',
       ' lxllcllxl ',
-      ' llllclllle',
+      'ellllclllle',
       ' lllxlllll ',
       ' lBlllllSl ',
       ' lllllllll ',
@@ -190,6 +192,10 @@ G.data.maps = {
       { x: 2, y: 7, obj: true, script: 'bed' },
       { x: 8, y: 7, obj: true, script: [['say', '', '王家の薬棚。四百年たっても、調合の道具はそろっている。'], ['brew']] },
       { x: 10, y: 5, step: true, script: 'sky_east' },
+      { x: 0, y: 5, step: true, script: 'sky_west' },
+      { x: 5, y: 5, sprite: 'guard', cond: W('!s1'), script: 'war_s1' },
+      { x: 3, y: 3, sprite: 'guard', cond: W('!s2'), script: 'war_s2' },
+      { x: 6, y: 4, sprite: 'liese', cond: function (s) { return s.flags.lieseCame && !s.flags.lieseDown; }, script: 'war_liese' },
       { x: 2, y: 5, sprite: 'rubble', script: [['say', '', '崩れた噴水。水は、とうに涸れている。']] },
       { x: 8, y: 6, sprite: 'rubble', script: [['say', '', '誰かの家だったもの。食卓に、皿が並んだままだ。']] }
     ]
@@ -219,6 +225,8 @@ G.data.maps = {
       { x: 6, y: 8, gather: 'gekko' },
       { x: 11, y: 1, gather: 'akami' },
       { x: 2, y: 6, gather: 'akami' },
+      { x: 7, y: 5, sprite: 'mage', cond: W('!m1'), script: 'war_m1' },
+      { x: 12, y: 3, sprite: 'mage', cond: W('!m2'), script: 'war_m2' },
       { x: 13, y: 9, sprite: 'chest', cond: '!chestGarden', script: [['say', '', '崩れた東屋の下に、古い箱がある。'], ['give', 'jou', 2], ['flag', 'chestGarden']] }
     ]
   },
@@ -244,6 +252,43 @@ G.data.maps = {
       { x: 5, y: 1, obj: true, script: 'archive_record' },
       { x: 1, y: 2, sprite: 'chest', cond: '!chestArcA', script: [['give', 'kitsuke', 2], ['flag', 'chestArcA']] },
       { x: 9, y: 8, sprite: 'chest', cond: '!chestArcB', script: [['give', 'kaen', 2], ['flag', 'chestArcB']] }
+    ]
+  },
+
+  gate: {
+    name: '城の正門', dark: 0,
+    rows: [
+      '           ',
+      ' lllllllll ',
+      ' lxlllllxl ',
+      ' lllllllll ',
+      ' llllllllle',
+      ' lllllllll ',
+      ' lxlllllxl ',
+      ' lllllllll ',
+      '           '
+    ],
+    ev: [
+      { x: 10, y: 4, step: true, script: [['warp', 'sky', 1, 5, 'right']] },
+      { x: 2, y: 4, sprite: 'king', cond: '!kingDown', script: 'war_king' },
+      { x: 2, y: 3, sprite: 'guard', cond: '!kingDown', script: [['say', '近衛兵', '陛下の御前だ。剣を引け、剣聖。']] },
+      { x: 2, y: 5, sprite: 'mage', cond: '!kingDown', script: [['say', '魔導師', '杭はもう、十分に打たれた。この都は落ちる。']] }
+    ]
+  },
+
+  altar: {
+    name: '隠された祭壇', dark: 0.1,
+    rows: [
+      '#######',
+      '#sssss#',
+      '#ssAss#',
+      '#sscss#',
+      '#sscss#',
+      '#sscss#',
+      '#######'
+    ],
+    ev: [
+      { x: 3, y: 2, obj: true, script: 'altar' }
     ]
   }
 };

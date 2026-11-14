@@ -21,8 +21,8 @@
 
   G.menu = {
     rest: function () {
-      var s = G.state, st = G.stats();
-      s.hp = st.maxhp; s.sp = st.maxsp; s.gathered = {}; s.rests++;
+      var s = G.state;
+      G.fullHeal(); s.gathered = {}; s.rests++;
       ui.hud();
     },
 
@@ -42,13 +42,22 @@
 
     status: async function () {
       var s = G.state, st = G.stats();
-      var sk = G.data.skills.filter(function (k) { return k.lv <= s.lv; }).map(function (k) { return k.name; }).join('、');
+      var sk = G.data.skills.filter(function (k) { return !k.who && k.lv <= s.lv; }).map(function (k) { return k.name; }).join('、');
       await ui.say('カイン',
         'Lv ' + s.lv + '（次まで ' + (G.needExp(s.lv) - s.exp) + '）\n' +
         'HP ' + s.hp + '/' + st.maxhp + '　SP ' + s.sp + '/' + st.maxsp + '\n' +
         '攻撃 ' + st.atk + '（' + IT(s.weapon).name + '）　守り ' + st.def + '（' + IT(s.armor).name + '）\n' +
         'わざ：' + sk + '\n' +
         '死ねなかった回数：' + s.deaths);
+      if (s.flags.amelia) {
+        var at = G.statsOf('amelia');
+        var ask = G.data.skills.filter(function (k) { return k.who === 'amelia' && k.lv <= s.lv; }).map(function (k) { return k.name; }).join('、');
+        await ui.say('アメリア',
+          'HP ' + s.ahp + '/' + at.maxhp + '　SP ' + s.asp + '/' + at.maxsp + '\n' +
+          '攻撃 ' + at.atk + '　守り ' + at.def + '\n' +
+          'わざ：' + ask + '\n' +
+          'レベルはカインと一緒に上がる。');
+      }
     },
 
     items: async function () {
@@ -60,10 +69,17 @@
           return { label: IT(id).name + ' ×' + s.items[id], sub: IT(id).desc, disabled: IT(id).type !== 'potion' };
         }));
         if (i < 0) return;
-        var it = IT(ids[i]), st = G.stats();
+        var it = IT(ids[i]), who = 'hero', pt = G.party();
+        if (pt.length > 1) {
+          var w = await ui.list('だれに使う？', pt.map(function (id) {
+            return { label: G.NAMES[id], sub: 'HP ' + G.hp(id) + '/' + G.statsOf(id).maxhp + '　SP ' + G.sp(id) + '/' + G.statsOf(id).maxsp };
+          }));
+          if (w < 0) continue;
+          who = pt[w];
+        }
         G.addItem(ids[i], -1);
-        if (it.heal) s.hp = Math.min(st.maxhp, s.hp + it.heal);
-        if (it.sp) s.sp = Math.min(st.maxsp, s.sp + it.sp);
+        if (it.heal) G.addHp(who, it.heal);
+        if (it.sp) G.addSp(who, it.sp);
         ui.hud();
       }
     },
@@ -156,7 +172,7 @@
     start: function (saved) {
       $('title').hidden = true;
       G.state = saved || G.newState();
-      if (!saved) { var st = G.stats(); G.state.hp = st.maxhp; G.state.sp = st.maxsp; }
+      if (!saved) G.fullHeal();
       G.field.enter(G.state.map);
       G.field.active = true;
       ui.hud();

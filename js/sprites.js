@@ -9,7 +9,7 @@
     'S': { walk: false }, 'a': { walk: false }, 'q': { walk: false }, 'T': { walk: false }, 'x': { walk: false },
     'g': { walk: true }, 'p': { walk: true }, 'f': { walk: true }, 'b': { walk: true }, 'D': { walk: true },
     'o': { walk: true }, 's': { walk: true }, 'U': { walk: true }, 'M': { walk: true }, 'c': { walk: true },
-    'l': { walk: true }
+    'l': { walk: true }, 'e': { walk: true }
   };
 
   // 同じマスはいつも同じ模様になるよう、座標から乱数を作る
@@ -127,6 +127,11 @@
         specks(c, ox, oy, tx, ty, ['#c2c8d6', '#eef1f7', '#b4bccc'], 8);
         if (rnd(tx, ty, 5) > 0.7) rect(c, '#a9b2c4', ox + 3, oy + 8, 9, 1);
         break;
+      case 'e':
+        // となりの場所へ続く通り道。雲の床に青い印
+        drawTile(c, 'l', ox, oy, tx, ty);
+        rect(c, '#7fbfe6', ox + 2, oy + 7, 12, 2); rect(c, '#7fbfe6', ox + 7, oy + 2, 2, 12);
+        rect(c, '#bfe0f4', ox + 6, oy + 6, 4, 4); break;
       case 'x':
         drawTile(c, 'l', ox, oy, tx, ty);
         rect(c, '#8f97aa', ox + 1, oy + 6, 14, 9); rect(c, '#b4bccc', ox + 3, oy + 2, 5, 8); rect(c, '#6f7689', ox + 9, oy + 9, 5, 6);
@@ -184,6 +189,10 @@
       '................', '................', '................', '.....bbbbbb.....', '...bbbbbbbbbb...', '..bbbabbbbabbb..',
       '..bbacabbacabb..', '.bbbbabbbbabbbb.', '.bbbbbbabbbbbbb.', '.bbabbacabbabbb.', '..bacabbabacabb.', '..bbabbbbbbabb..',
       '...bbbbbbbbbb...', '.....bbbbbb.....', '................', '................'] },
+    chest: { pal: { a: '#8a5a2a', b: '#5a3a1a', c: '#e6c04a' }, art: [
+      '................', '................', '................', '................', '..bbbbbbbbbbbb..', '.baaaaaaaaaaaab.',
+      '.baaaaaaaaaaaab.', '.bccccccccccccb.', '.baaaaaccaaaaab.', '.baaaaaccaaaaab.', '.baaaaaaaaaaaab.', '.baaaaaaaaaaaab.',
+      '.bbbbbbbbbbbbbb.', '................', '................', '................'] },
     rubble: { pal: { a: '#8f97aa', b: '#6f7689', c: '#b4bccc' }, art: [
       '................', '................', '......cc........', '.....ccca.......', '.....ccaa.......', '.....caaa..c....',
       '.....caab.cca...', '....ccaab.caa...', '....caaabccaab..', '...ccaaabcaaab..', '..ccaaaabaaaabb.', '..caaaaabaaaabb.',

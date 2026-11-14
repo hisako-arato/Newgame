@@ -171,23 +171,79 @@ G.data.maps = {
   },
 
   sky: {
-    name: '？？？', dark: 0,
+    name: '廃都の広場', dark: 0,
     rows: [
       '           ',
-      ' lllllllll ',
+      ' llllTllll ',
       ' lxlllllxl ',
       ' llllcllll ',
       ' lxllcllxl ',
-      ' llllcllll ',
+      ' llllclllle',
       ' lllxlllll ',
-      ' lllllllxl ',
+      ' lBlllllSl ',
       ' lllllllll ',
       '           '
     ],
     ev: [
-      { x: 5, y: 2, sprite: 'amelia', script: 'sky_princess' },
-      { x: 2, y: 5, obj: false, sprite: 'rubble', script: [['say', '', '崩れた噴水。水は、とうに涸れている。']] },
-      { x: 8, y: 5, sprite: 'rubble', script: [['say', '', '誰かの家だったもの。食卓に、皿が並んだままだ。']] }
+      { x: 5, y: 2, sprite: 'amelia', cond: '!amelia', script: 'sky_princess' },
+      { x: 5, y: 1, obj: true, script: 'throne' },
+      { x: 2, y: 7, obj: true, script: 'bed' },
+      { x: 8, y: 7, obj: true, script: [['say', '', '王家の薬棚。四百年たっても、調合の道具はそろっている。'], ['brew']] },
+      { x: 10, y: 5, step: true, script: 'sky_east' },
+      { x: 2, y: 5, sprite: 'rubble', script: [['say', '', '崩れた噴水。水は、とうに涸れている。']] },
+      { x: 8, y: 6, sprite: 'rubble', script: [['say', '', '誰かの家だったもの。食卓に、皿が並んだままだ。']] }
+    ]
+  },
+
+  garden: {
+    name: '空中庭園', dark: 0,
+    enc: { g: ['kurage', 'kurage', 'tori'] },
+    rows: [
+      '                ',
+      ' llllllgggggxll ',
+      ' lxgggggggtgggl ',
+      ' lgggtgggggggxl ',
+      ' lggggglllggggl ',
+      'ellllllllllllle ',
+      ' lgggglllgggggl ',
+      ' lgtgggggggtggl ',
+      ' lxggggggggggll ',
+      ' llllgggxggllll ',
+      '                '
+    ],
+    ev: [
+      { x: 0, y: 5, step: true, script: [['warp', 'sky', 9, 5, 'left']] },
+      { x: 14, y: 5, step: true, script: 'garden_east' },
+      { x: 3, y: 2, gather: 'gekko' },
+      { x: 12, y: 7, gather: 'gekko' },
+      { x: 6, y: 8, gather: 'gekko' },
+      { x: 11, y: 1, gather: 'akami' },
+      { x: 2, y: 6, gather: 'akami' },
+      { x: 13, y: 9, sprite: 'chest', cond: '!chestGarden', script: [['say', '', '崩れた東屋の下に、古い箱がある。'], ['give', 'jou', 2], ['flag', 'chestGarden']] }
+    ]
+  },
+
+  archive: {
+    name: '王家の書庫', dark: 0.15,
+    enc: { s: ['yoroi', 'yoroi', 'kurage'] },
+    rows: [
+      '###########',
+      '#SSSSSSSSS#',
+      '#sssscssss#',
+      '#sSsscssSs#',
+      '#sSsscssSs#',
+      '#sssscssss#',
+      '#sSsscssSs#',
+      '#sSsscssSs#',
+      '#sssscssss#',
+      '#####D#####'
+    ],
+    ev: [
+      { x: 5, y: 9, step: true, script: [['warp', 'garden', 13, 5, 'left']] },
+      { x: 5, y: 2, sprite: 'bannin', cond: '!archiveDone', script: 'archive_guard' },
+      { x: 5, y: 1, obj: true, script: 'archive_record' },
+      { x: 1, y: 2, sprite: 'chest', cond: '!chestArcA', script: [['give', 'kitsuke', 2], ['flag', 'chestArcA']] },
+      { x: 9, y: 8, sprite: 'chest', cond: '!chestArcB', script: [['give', 'kaen', 2], ['flag', 'chestArcB']] }
     ]
   }
 };

@@ -73,9 +73,11 @@
 
     hud: function () {
       var s = G.state; if (!s) return;
-      var st = G.stats();
       $('goal').textContent = s.goal ? '目的：' + s.goal : '';
-      $('stat').textContent = 'Lv' + s.lv + '　HP ' + s.hp + '/' + st.maxhp + '　SP ' + s.sp + '/' + st.maxsp + '　' + s.gold + 'G';
+      $('stat').textContent = 'Lv' + s.lv + '　' + s.gold + 'G\n' + G.party().map(function (id) {
+        var t = G.statsOf(id);
+        return G.NAMES[id] + '　HP ' + G.hp(id) + '/' + t.maxhp + '　SP ' + G.sp(id) + '/' + t.maxsp;
+      }).join('\n');
     },
 
     // 章の終わりなどの一枚絵（文字だけ）

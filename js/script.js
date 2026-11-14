@@ -29,6 +29,7 @@
       case 'flash': await ui.flash(); break;
       case 'wait': await G.util.sleep(c[1]); break;
       case 'rest': G.menu.rest(); break;
+      case 'join': s.flags[c[1]] = true; G.fullHeal(); ui.hud(); break;
       case 'dream': {
         // はじめの数回だけ、過去の断片を順に見せる
         var d = G.data.dreams[s.rests - 1];

@@ -17,6 +17,7 @@ G.newState = function () {
     items: { kizu: 2, gekko: 2 },
     weapon: 'rusty', armor: 'coat',
     flags: {}, quests: {}, gathered: {},
+    ahp: 0, asp: 0,   // 仲間（アメリア）のHP・SP
     deaths: 0, rests: 0, goal: ''
   };
 };
@@ -30,6 +31,27 @@ G.stats = function () {
     atk: 9 + 3 * l + it[s.weapon].atk,
     def: 4 + 2 * l + it[s.armor].def
   };
+};
+// 仲間。レベルは主人公と共通にして、育てる手間を増やさない
+G.NAMES = { hero: 'カイン', amelia: 'アメリア' };
+G.party = function () { return G.state.flags.amelia ? ['hero', 'amelia'] : ['hero']; };
+G.statsOf = function (id) {
+  if (id !== 'amelia') return G.stats();
+  var l = G.state.lv - 1;
+  return { maxhp: 34 + 8 * l, maxsp: 20 + 6 * l, atk: 5 + 2 * l, def: 3 + 2 * l };
+};
+G.hp = function (id) { return G.state[id === 'amelia' ? 'ahp' : 'hp']; };
+G.sp = function (id) { return G.state[id === 'amelia' ? 'asp' : 'sp']; };
+G.addHp = function (id, n) {
+  var k = id === 'amelia' ? 'ahp' : 'hp';
+  G.state[k] = G.util.clamp(G.state[k] + n, 0, G.statsOf(id).maxhp);
+};
+G.addSp = function (id, n) {
+  var k = id === 'amelia' ? 'asp' : 'sp';
+  G.state[k] = G.util.clamp(G.state[k] + n, 0, G.statsOf(id).maxsp);
+};
+G.fullHeal = function () {
+  G.party().forEach(function (id) { G.addHp(id, 9999); G.addSp(id, 9999); });
 };
 G.needExp = function (lv) { return 14 * lv + 6 * lv * lv; };
 

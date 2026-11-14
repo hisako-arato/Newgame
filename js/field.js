@@ -7,6 +7,7 @@
   var F = G.field = {
     active: false, busy: false,
     path: [], target: null, moving: null, keys: {}, safe: 0, mark: null, t: 0,
+    tail: null,   // 仲間の立ち位置（主人公が直前にいたマス）
 
     init: function () {
       cv = G.util.$('view'); ctx = cv.getContext('2d');
@@ -22,7 +23,7 @@
       map = G.data.maps[id];
       bg = G.sprites.renderMap(map);
       G.state.map = id;
-      F.path = []; F.target = null; F.moving = null; F.mark = null; F.safe = 0;
+      F.path = []; F.target = null; F.moving = null; F.mark = null; F.safe = 0; F.tail = null;
       G.ui.mapName(map.name);
     },
     warp: function (id, x, y, dir) {
@@ -137,7 +138,8 @@
       var s = G.state, d = DIRS[dir];
       s.dir = dir;
       if (!F.passable(s.x + d[0], s.y + d[1])) return false;
-      F.moving = { fx: s.x, fy: s.y, tx: s.x + d[0], ty: s.y + d[1], t: 0 };
+      F.moving = { fx: s.x, fy: s.y, tx: s.x + d[0], ty: s.y + d[1], t: 0, pf: F.tail };
+      F.tail = { x: s.x, y: s.y, dir: dir };
       return true;
     },
     onStep: function () {
@@ -190,6 +192,11 @@
 
       var list = F.events().filter(function (e) { return e.sprite || e.gather; })
         .map(function (e) { return { y: e.y * T, x: e.x * T, name: e.sprite || e.gather, dir: e.dir }; });
+      if (s.flags.amelia && F.tail) {
+        // 歩いているあいだは、前の立ち位置から主人公のいたマスへ滑らせる
+        var pf = m && m.pf ? m.pf : F.tail, k = m && m.pf ? m.t : 1;
+        list.push({ y: (pf.y + (F.tail.y - pf.y) * k) * T, x: (pf.x + (F.tail.x - pf.x) * k) * T, name: 'amelia', dir: F.tail.dir, frame: m ? (m.t < 0.5 ? 0 : 1) : 0 });
+      }
       list.push({ y: hy, x: hx, name: 'hero', dir: s.dir, frame: m ? (m.t < 0.5 ? 1 : 0) : 0, hero: true });
       list.sort(function (a, b) { return a.y - b.y; });
       list.forEach(function (o) {

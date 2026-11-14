@@ -34,5 +34,10 @@ G.data.skills = [
   { id: 'niren',     name: '二連斬り',   lv: 2, sp: 3,  kind: 'multi', hits: 2, rate: 0.7, desc: 'すばやく二度斬る' },
   { id: 'kabuto',    name: '兜割り',     lv: 3, sp: 5,  kind: 'break', rate: 1.5, desc: '強く斬り、相手の守りを下げる' },
   { id: 'iyashi',    name: '癒やしの水', lv: 4, sp: 6,  kind: 'heal', rate: 0.45, desc: 'HPを大きく回復する' },
-  { id: 'issen',     name: '剣聖の一閃', lv: 6, sp: 10, kind: 'slash', rate: 2.5, desc: '四百年前の一太刀' }
+  { id: 'issen',     name: '剣聖の一閃', lv: 6, sp: 10, kind: 'slash', rate: 2.5, desc: '四百年前の一太刀' },
+  // who があるものは仲間の技
+  { id: 'ikazuchi',  name: '雷の矢',     who: 'amelia', lv: 1, sp: 4,  kind: 'magic', elem: 'thunder', pow: 16, desc: '雷の魔法。金属や鳥によく効く' },
+  { id: 'megumi',    name: '恵みの雨',   who: 'amelia', lv: 1, sp: 5,  kind: 'heal', rate: 0.5, desc: 'ひとりのHPを大きく回復する' },
+  { id: 'kiri',      name: '霧の衣',     who: 'amelia', lv: 5, sp: 6,  kind: 'weaken', desc: '霧で相手の目をくらませ、攻撃を弱める' },
+  { id: 'kaminari',  name: '神鳴り',     who: 'amelia', lv: 8, sp: 12, kind: 'magic', elem: 'thunder', pow: 42, desc: '王家の雷。地上が「神の怒り」と呼んだもの' }
 ];

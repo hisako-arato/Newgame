@@ -137,5 +137,99 @@ G.data.monsters = {
       '.baaab...baaab..',
       '.ffbbf...fbbff..'
     ]
+  },
+
+  // ---- 空（第二章）----
+  kurage: {
+    name: '雲くらげ', hp: 62, atk: 27, def: 6, exp: 42, gold: 14, weak: 'fire',
+    drops: [{ item: 'gekko', rate: 0.4 }],
+    pal: { a: '#cfe6f7', b: '#8fbfe0', c: '#f4fbff', e: '#2a3a6a' },
+    art: [
+      '................',
+      '.....aaaaaa.....',
+      '...aacccccaaa...',
+      '..aaccaaaaaaaa..',
+      '.aacaaaaaaaaaaa.',
+      '.aaaaeaaaaeaaaa.',
+      '.aaaaeaaaaeaaaa.',
+      '.aaaaaaaaaaaaab.',
+      '.baaaaaaaaaabbb.',
+      '..bbbbbbbbbbbb..',
+      '..b.b.bb.b..b...',
+      '..b.b.b..b..b...',
+      '.b..b.b..bb.b...',
+      '.b.b..b...b..b..',
+      '...b...b..b..b..',
+      '................'
+    ]
+  },
+  tori: {
+    name: '風喰い鳥', hp: 78, atk: 31, def: 8, exp: 50, gold: 18, weak: 'thunder', charge: 0.2,
+    drops: [{ item: 'akami', rate: 0.4 }],
+    pal: { a: '#6a8a9a', b: '#48606e', c: '#d8e6ee', e: '#ffcf40', k: '#e0903a' },
+    art: [
+      '................',
+      '......aaaa......',
+      '.....aaaaaa.....',
+      '.....aeaaeakk...',
+      '.....aaaaaak....',
+      'a.....aaaa.....a',
+      'aa...aaccaa...aa',
+      'aaa.aaccccaa.aaa',
+      'aaaaaaccccaaaaaa',
+      'baaaaaccccaaaaab',
+      '.bbaaaaccaaaabb.',
+      '..bbbaaaaaabbb..',
+      '.....aaaaaa.....',
+      '......b..b......',
+      '.....kk..kk.....',
+      '................'
+    ]
+  },
+  yoroi: {
+    name: 'さまよう甲冑', hp: 110, atk: 34, def: 18, exp: 70, gold: 30, weak: 'thunder',
+    drops: [{ item: 'kiba', rate: 0.3 }],
+    pal: { a: '#8a93a8', b: '#5a6278', c: '#c4ccdc', e: '#6ad0ff', k: '#20242e' },
+    art: [
+      '......cccc......',
+      '.....caaaac.....',
+      '.....akkkka.....',
+      '.....aekkea.....',
+      '.....aaaaaa.....',
+      '..cc.baaaab.cc..',
+      '.caaaaaaaaaaaac.',
+      '.aaabaaccaabaaa.',
+      '.aab.aaccaa.baa.',
+      '.aa..aaaaaa..aa.',
+      '.aa..abbbba..aa.',
+      '.bb..aa..aa..bbc',
+      '.....aa..aa...c.',
+      '.....aa..aa...c.',
+      '....baa..aab..c.',
+      '....bbb..bbb....'
+    ]
+  },
+  bannin: {
+    name: '書庫の番人', hp: 380, atk: 36, def: 14, exp: 260, gold: 0, weak: 'thunder', charge: 0.3, boss: true,
+    drops: [],
+    pal: { a: '#9aa0ae', b: '#6b7180', c: '#c8cedb', e: '#7ae0ff', g: '#c9a544' },
+    art: [
+      '....cccccccc....',
+      '...caaaaaaaac...',
+      '...aaeeaaeeaa...',
+      '...aaeeaaeeaa...',
+      '...aaaaggaaaa...',
+      '.ccbaaaaaaaabcc.',
+      'caaaaaggggaaaaac',
+      'aaaabaggggabaaaa',
+      'aaab.aaggaa.baaa',
+      'aaa..aaaaaa..aaa',
+      'aaa..aaaaaa..aaa',
+      'bbb..abbbba..bbb',
+      '.....aab.baa....',
+      '....aaab.baaa...',
+      '....aaab.baaa...',
+      '...bbbbb.bbbbb..'
+    ]
   }
 };

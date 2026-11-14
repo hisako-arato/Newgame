@@ -120,7 +120,7 @@
       if (e.gather) {
         return F.run(async function () {
           G.state.gathered[F.gkey(e)] = 1;
-          await G.script.run([['give', e.gather, 2]]);
+          await G.script.run([['give', e.gather, e.n || 2]]);
         });
       }
       return F.run(function () { return G.script.run(e.script); });

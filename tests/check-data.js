@@ -7,7 +7,7 @@ var ctx = vm.createContext({ console: console, Math: Math });
 });
 var G = vm.runInContext('G', ctx), D = G.data, S = G.sprites;
 var KNOWN = ['say', 'nar', 'choice', 'if', 'call', 'flag', 'goal', 'give', 'take', 'gold', 'warp', 'fade', 'flash', 'wait',
-  'rest', 'join', 'equip', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
+  'rest', 'join', 'equip', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
 var fails = 0;
 function test(name, fn) {
   var errs = [];
@@ -31,6 +31,7 @@ function walk(cmds, where, cb, seen) {
     if (c[0] === 'choice') c[2].forEach(function (o) { walk(o[1], where, cb, seen); });
     if (c[0] === 'if') { walk(c[2], where, cb, seen); walk(c[3] || [], where, cb, seen); }
     if (c[0] === 'call') walk(c[1], where, cb, seen);
+    if (c[0] === 'stage') c[1].forEach(function (b) { walk(b, where, cb, seen); });
     if (c[0] === 'battle') walk(c[2] || [], where, cb, seen);
   });
 }
@@ -73,6 +74,7 @@ test('命令はすべて知っているもので、名前の参照先がある',
     if (c[0] === 'say' && (typeof c[1] !== 'string' || typeof c[2] !== 'string')) bad(where + ' の say は [名前, 台詞]');
     if ((c[0] === 'give' || c[0] === 'take' || c[0] === 'equip') && !D.items[c[1]]) bad(where + ' の道具「' + c[1] + '」がない');
     if (c[0] === 'battle' && !D.monsters[c[1]]) bad(where + ' の魔物「' + c[1] + '」がない');
+    if (c[0] === 'memory' && !D.memories[c[1]]) bad(where + ' の記憶「' + c[1] + '」がない');
     if (c[0] === 'shop' && !D.shops[c[1]]) bad(where + ' の店「' + c[1] + '」がない');
   });
 });
@@ -102,8 +104,9 @@ test('魔物の絵は16×16で、色がそろっている。落とし物・出�
     var m = D.monsters[id];
     // 人の姿の相手は、歩く画面と同じ絵を使う
     if (m.person) { if (!S.PEOPLE[m.person]) bad(id + ' の人の絵「' + m.person + '」がない'); }
+    else if (m.like) { if (!D.monsters[m.like] || !D.monsters[m.like].art) bad(id + ' が絵を借りる「' + m.like + '」がない'); }
     else if (m.art.length !== 16) bad(id + ' の絵が ' + m.art.length + ' 行');
-    (m.art || []).forEach(function (r, y) {
+    (m.art || (m.like && D.monsters[m.like] ? D.monsters[m.like].art : [])).forEach(function (r, y) {
       if (r.length !== 16) bad(id + ' の絵の ' + y + ' 行目が ' + r.length + ' 文字');
       for (var x = 0; x < r.length; x++) if (r.charAt(x) !== '.' && !m.pal[r.charAt(x)]) bad(id + ' の絵に色のない文字「' + r.charAt(x) + '」');
     });
@@ -119,7 +122,43 @@ test('魔物の絵は16×16で、色がそろっている。落とし物・出�
   });
 });
 
+test('どの地図も、入口から人・物・出口のすべてに歩いて行ける', function (bad) {
+  // 入口＝ワープで着く場所。条件つきの人（ボスなど）は、いなくなったものとして数える
+  var arrive = {};
+  allScripts(function (c) { if (c[0] === 'warp' && D.maps[c[1]]) (arrive[c[1]] = arrive[c[1]] || []).push([c[2], c[3]]); });
+  arrive.lair = (arrive.lair || []).concat([[4, 3]]);
+  Object.keys(D.maps).forEach(function (m) {
+    var rows = D.maps[m].rows, W = rows[0].length, seen = {}, q = (arrive[m] || []).map(function (p) { return p[1] * W + p[0]; });
+    var block = {};
+    D.maps[m].ev.forEach(function (e) { if ((e.sprite || e.gather) && !e.cond) block[e.y * W + e.x] = 1; });
+    q.forEach(function (n) { seen[n] = 1; });
+    while (q.length) {
+      var cur = q.shift(), cx = cur % W, cy = (cur - cx) / W;
+      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) {
+        var nx = cx + d[0], ny = cy + d[1], n = ny * W + nx;
+        if (seen[n] || !S.walkable(tile(m, nx, ny)) || block[n]) return;
+        seen[n] = 1; q.push(n);
+      });
+    }
+    D.maps[m].ev.forEach(function (e) {
+      var ok = seen[e.y * W + e.x];
+      // 通れない人・物は、となり（カウンター越しなら、その向こう）に立てればよい
+      if (!ok) [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) {
+        var x = e.x + d[0], y = e.y + d[1];
+        if (tile(m, x, y) === 'k') { x += d[0]; y += d[1]; }
+        if (seen[y * W + x]) ok = true;
+      });
+      if (!ok) bad(m + ' (' + e.x + ',' + e.y + ') に行けない');
+    });
+  });
+});
+
 test('調合・店・依頼・初期の持ち物が、ある道具と魔物を指している', function (bad) {
+  D.forge.forEach(function (f) {
+    if (!D.items[f.out]) bad('鍛冶の「' + f.out + '」がない');
+    Object.keys(f.need).forEach(function (id) { if (!D.items[id]) bad('鍛冶の材料「' + id + '」がない'); });
+  });
+  D.dreams.forEach(function (d, i) { if (typeof d.text !== 'string' || typeof d.stage !== 'number') bad('夢 ' + i + ' は {stage, text}'); });
   D.recipes.forEach(function (r) {
     if (!D.items[r.out]) bad('調合の「' + r.out + '」がない');
     Object.keys(r.need).forEach(function (id) { if (!D.items[id]) bad('調合の材料「' + id + '」がない'); });

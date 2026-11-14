@@ -30,11 +30,12 @@
       if (!G.field.active || G.field.busy) return;
       G.field.run(async function () {
         for (;;) {
-          var i = await ui.list('メニュー', [{ label: 'つよさ' }, { label: 'もちもの' }, { label: '依頼' }, { label: 'きろくする' }], { cancelLabel: 'とじる' });
+          var i = await ui.list('メニュー', [{ label: 'つよさ' }, { label: 'もちもの' }, { label: '依頼' }, { label: 'きろくする' }, { label: '記憶', sub: '思い出したこと ' + G.state.mem.length + '/' + Object.keys(G.data.memories).length }], { cancelLabel: 'とじる' });
           if (i < 0) return;
           if (i === 0) await G.menu.status();
           if (i === 1) await G.menu.items();
           if (i === 2) await G.menu.questLog();
+          if (i === 4) await G.menu.memories();
           if (i === 3) await ui.say('', G.save() ? '記録した。（歩いているあいだも自動で記録されます）' : 'この端末では記録できなかった。');
         }
       });
@@ -90,9 +91,38 @@
       await ui.say('受けている依頼', act.map(function (q) { return '・' + q.title + '（' + questProgress(q) + '）\n　' + q.desc; }).join('\n'));
     },
 
+    memories: async function () {
+      var s = G.state;
+      if (!s.mem.length) { await ui.say('', 'まだ何も思い出していない。\n世界を歩くうちに、思い出すことがあるかもしれない。'); return; }
+      for (;;) {
+        var i = await ui.list('記憶', s.mem.map(function (id) { return { label: G.data.memories[id].title }; }));
+        if (i < 0) return;
+        var m = G.data.memories[s.mem[i]];
+        await ui.say('', '【記憶　' + m.title + '】\n' + m.text);
+      }
+    },
+
+    // 鍛冶屋：鉱石とお金で装備を打ってもらう
+    forge: async function () {
+      var s = G.state;
+      for (;;) {
+        var fs = G.data.forge;
+        var i = await ui.list('何を打ってもらう？（所持金 ' + s.gold + 'G）', fs.map(function (f) {
+          var it = IT(f.out), own = s.weapon === f.out || s.armor === f.out;
+          var up = it.type === 'weapon' ? '攻撃+' + it.atk : '守り+' + it.def;
+          return { label: it.name + '（' + up + '）　' + f.gold + 'G', sub: own ? '装備中' : needText(f.need), disabled: own || s.gold < f.gold || !canMake(f) };
+        }), { cancelLabel: 'やめる' });
+        if (i < 0) return;
+        var f = fs[i];
+        Object.keys(f.need).forEach(function (id) { G.addItem(id, -f.need[id]); });
+        s.gold -= f.gold;
+        await G.script.run([['equip', f.out]]);
+      }
+    },
+
     brew: async function () {
       for (;;) {
-        var rs = G.data.recipes;
+        var rs = G.data.recipes.filter(function (r) { return G.cond(r.cond); });
         var i = await ui.list('何を調合する？', rs.map(function (r) {
           return { label: IT(r.out).name + '（所持 ' + G.count(r.out) + '）', sub: needText(r.need), disabled: !canMake(r) };
         }), { cancelLabel: 'やめる' });

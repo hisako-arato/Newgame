@@ -9,7 +9,8 @@
     'S': { walk: false }, 'a': { walk: false }, 'q': { walk: false }, 'T': { walk: false }, 'x': { walk: false },
     'g': { walk: true }, 'p': { walk: true }, 'f': { walk: true }, 'b': { walk: true }, 'D': { walk: true },
     'o': { walk: true }, 's': { walk: true }, 'U': { walk: true }, 'M': { walk: true }, 'c': { walk: true },
-    'l': { walk: true }, 'e': { walk: true }, 'A': { walk: false }
+    'l': { walk: true }, 'e': { walk: true }, 'A': { walk: false },
+    'z': { walk: true }, 'r': { walk: false }, 'P': { walk: false }, 'm': { walk: true }
   };
 
   // 同じマスはいつも同じ模様になるよう、座標から乱数を作る
@@ -127,6 +128,27 @@
         specks(c, ox, oy, tx, ty, ['#c2c8d6', '#eef1f7', '#b4bccc'], 8);
         if (rnd(tx, ty, 5) > 0.7) rect(c, '#a9b2c4', ox + 3, oy + 8, 9, 1);
         break;
+      case 'z':
+        // 雷で焼けた土
+        rect(c, '#4a4038', ox, oy, T, T);
+        specks(c, ox, oy, tx, ty, ['#3a312b', '#5c5046', '#2c2520'], 8);
+        if (rnd(tx, ty, 4) > 0.8) rect(c, '#e8c84a', ox + 5 + Math.floor(rnd(tx, ty, 6) * 6), oy + 6, 1, 1);
+        break;
+      case 'r':
+        drawTile(c, 'z', ox, oy, tx, ty);
+        rect(c, '#6a625a', ox + 2, oy + 5, 12, 9); rect(c, '#8a8278', ox + 4, oy + 3, 7, 5); rect(c, '#4c463f', ox + 2, oy + 12, 12, 2);
+        break;
+      case 'm':
+        // 湿地のぬかるみ
+        rect(c, '#3f5a4c', ox, oy, T, T);
+        specks(c, ox, oy, tx, ty, ['#34493e', '#54705f', '#2c4038'], 8);
+        break;
+      case 'P':
+        // 壁に掛かった古い肖像画
+        stone(c, ox, oy, '#3d3a48', '#27252f');
+        rect(c, '#c9a544', ox + 3, oy + 2, 10, 12); rect(c, '#2b3350', ox + 4, oy + 3, 8, 10);
+        rect(c, '#e8c4a0', ox + 6, oy + 5, 4, 4); rect(c, '#cfd3dc', ox + 6, oy + 4, 4, 2); rect(c, '#1c2030', ox + 5, oy + 9, 6, 4);
+        break;
       case 'A':
         // 祭壇。白い石の台に、青く光る小瓶
         stone(c, ox, oy, '#5d5a6a', '#4b4857');
@@ -178,6 +200,9 @@
     adventurer:  { H: '#b0402a', S: '#e8c4a0', E: '#222', C: '#4a6a4a', D: '#3a3a2a', B: '#222' },
     adventurer2: { H: '#d8d8d8', S: '#c9a080', E: '#222', C: '#5a4a6a', D: '#3a3040', B: '#222' },
     king:        { H: '#e8e8e8', S: '#e0b896', E: '#222', C: '#a02f3a', D: '#6b1f28', B: '#3a2a20', K: '#f0c84a' },
+    bard:        { H: '#7ac0a0', S: '#f0cfae', E: '#2a5a4a', C: '#3a6a8a', D: '#2a4a5a', B: '#3a2a20', K: '#c9a544' },
+    hanna:       { H: '#e8e8ee', S: '#e0c0a8', E: '#222', C: '#7a5a7a', D: '#5a3f5a', B: '#3a2a20', L: '#e8e8ee' },
+    smith:       { H: '#2a2a2a', S: '#c8966e', E: '#222', C: '#5a4a3a', D: '#3a3028', B: '#222' },
     mage:        { H: '#3a2a4a', S: '#e0b896', E: '#222', C: '#6a4a9a', D: '#4a3470', B: '#222', K: '#8a6ac4', L: '#6a4a9a' },
     amelia:      { H: '#bfe0f4', S: '#fbe6d6', E: '#4a7ac4', C: '#f4f6fb', D: '#d8dde8', B: '#c2c8d6', L: '#bfe0f4' }
   };
@@ -199,6 +224,14 @@
       '................', '................', '................', '................', '..bbbbbbbbbbbb..', '.baaaaaaaaaaaab.',
       '.baaaaaaaaaaaab.', '.bccccccccccccb.', '.baaaaaccaaaaab.', '.baaaaaccaaaaab.', '.baaaaaaaaaaaab.', '.baaaaaaaaaaaab.',
       '.bbbbbbbbbbbbbb.', '................', '................', '................'] },
+    // 鉱石と雷晶は同じ形で、色だけ変える
+    tetsu: { pal: { a: '#3a3a44', b: '#55525e', c: '#8a8794' }, art: ['................', '................', '................', '......aa........', '.....acca..a....', '....acccaaaca...', '...accccaaccca..', '...acbccacccba..', '..accbbcacbbcca.', '..acbbbcccbbbca.', '.acccbbccccbbcca', '.accccccbccccccb', '.bbccccbbbcccbb.', '..bbbbbbbbbbbb..', '................', '................'] },
+    gin: { pal: { a: '#7a8496', b: '#aab4c6', c: '#e6ecf6' }, art: ['................', '................', '................', '......aa........', '.....acca..a....', '....acccaaaca...', '...accccaaccca..', '...acbccacccba..', '..accbbcacbbcca.', '..acbbbcccbbbca.', '.acccbbccccbbcca', '.accccccbccccccb', '.bbccccbbbcccbb.', '..bbbbbbbbbbbb..', '................', '................'] },
+    raisho: { pal: { a: '#a8841a', b: '#e8c84a', c: '#fff4b0' }, art: ['................', '................', '................', '......aa........', '.....acca..a....', '....acccaaaca...', '...accccaaccca..', '...acbccacccba..', '..accbbcacbbcca.', '..acbbbcccbbbca.', '.acccbbccccbbcca', '.accccccbccccccb', '.bbccccbbbcccbb.', '..bbbbbbbbbbbb..', '................', '................'] },
+    nemuri: { pal: { a: '#6a5aa0', b: '#9a8ad0', c: '#e6dcc8', d: '#bfb39a' }, art: [
+      '................', '................', '................', '................', '................', '......aaaa......',
+      '....aabbbbaa....', '...abbbbbbbba...', '...abbabbabba...', '....aaaaaaaa....', '......cccc......', '......cccc......',
+      '......cccc......', '.....dccccd.....', '................', '................'] },
     rubble: { pal: { a: '#8f97aa', b: '#6f7689', c: '#b4bccc' }, art: [
       '................', '................', '......cc........', '.....ccca.......', '.....ccaa.......', '.....caaa..c....',
       '.....caab.cca...', '....ccaab.caa...', '....caaabccaab..', '...ccaaabcaaab..', '..ccaaaabaaaabb.', '..caaaaabaaaabb.',
@@ -216,6 +249,9 @@
       }
     }
   }
+
+  // 色ちがいの魔物は、like で指した魔物の絵を借りる
+  function artOf(m) { return m.art || G.data.monsters[m.like].art; }
 
   // 人：向きと歩きの2コマをその場で作る
   function humanArt(dir, frame) {
@@ -247,13 +283,13 @@
       if (PEOPLE[name]) { paint(c, humanArt(dir || 'down', frame), PEOPLE[name], px, py, 1); return; }
       if (THINGS[name]) { paint(c, THINGS[name].art, THINGS[name].pal, px, py, 1); return; }
       var m = G.data.monsters[name];
-      if (m) paint(c, m.art, m.pal, px, py, 1);
+      if (m) paint(c, artOf(m), m.pal, px, py, 1);
     },
     drawMonster: function (c, id, sc) {
       var m = G.data.monsters[id];
       c.clearRect(0, 0, c.canvas.width, c.canvas.height);
       if (m.person) paint(c, humanArt('down', 0), PEOPLE[m.person], 0, 0, sc);
-      else paint(c, m.art, m.pal, 0, 0, sc);
+      else paint(c, artOf(m), m.pal, 0, 0, sc);
     }
   };
 })();

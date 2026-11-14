@@ -18,6 +18,9 @@ G.newState = function () {
     weapon: 'rusty', armor: 'coat',
     flags: {}, quests: {}, gathered: {},
     ahp: 0, asp: 0,   // 仲間（アメリア）のHP・SP
+    stage: 0,          // 第一章の進み具合（酒場の夜が何回目まで進んだか）
+    mem: [],           // 思い出した記憶
+    dreams: 0, talks: 0,   // 見た夢・空で聞いた姫の話の数
     deaths: 0, rests: 0, goal: ''
   };
 };
@@ -78,6 +81,8 @@ G.load = function () {
     var t = localStorage.getItem(G.SAVE_KEY);
     if (!t) return null;
     var s = JSON.parse(t), base = G.newState();
+    // 段階を持たない古い記録は、旗から段階を決める
+    if (s.stage === undefined && s.flags && s.flags.letter) { s.stage = 5; s.flags.n2 = s.flags.n3 = s.flags.n4 = true; }
     for (var k in base) if (s[k] === undefined) s[k] = base[k];
     return s;
   } catch (e) { return null; }

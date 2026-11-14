@@ -2,6 +2,8 @@
 // ev の種類：sprite 付き＝人や物（通れない）／obj＝地形そのものを調べる／step＝踏むと起きる／gather＝採集
 // 戦のあいだだけ出る人。W('!s1')＝戦が始まっていて、まだ s1 が立っていない
 function W(c) { return function (s) { return !!s.flags.war && !s.flags[c.slice(1)]; }; }
+// 物語がその段階まで進んだら出る人
+function ST(n) { return function (s) { return s.stage >= n; }; }
 G.data.maps = {
   lair: {
     name: '地下の隠れ家', dark: 0,
@@ -61,7 +63,8 @@ G.data.maps = {
       { x: 11, y: 7, sprite: 'merchant', script: 'stall' },
       { x: 6, y: 8, sprite: 'townsman', script: 'town_man' },
       { x: 12, y: 13, sprite: 'girl', script: 'town_girl' },
-      { x: 7, y: 1, sprite: 'guard', script: 'town_guard' }
+      { x: 7, y: 1, sprite: 'guard', script: 'town_guard' },
+      { x: 13, y: 9, sprite: 'smith', script: 'smith' }
     ]
   },
 
@@ -81,6 +84,8 @@ G.data.maps = {
       { x: 4, y: 7, step: true, script: [['warp', 'town', 4, 5, 'down']] },
       { x: 4, y: 2, sprite: 'master', script: 'bar_master' },
       { x: 1, y: 4, sprite: 'drunk', script: 'bar_drunk' },
+      { x: 7, y: 4, sprite: 'bard', cond: ST(1), script: 'bar_bard' },
+      { x: 2, y: 6, sprite: 'hanna', cond: ST(2), script: 'bar_hanna' },
       { x: 6, y: 4, sprite: 'liese', cond: 'lieseInBar', script: 'bar_liese' }
     ]
   },
@@ -121,7 +126,7 @@ G.data.maps = {
       'tggggggggppgggtfffft',
       'tggtgggggppggtffffft',
       'tggggggggppgtfffffft',
-      'tggggggggpppffffffft',
+      'ppppppppppppffffffff',
       'tggggggggppgtfffffft',
       'tgggggtggppggtffffft',
       'tggggggggppgggtfffft',
@@ -140,7 +145,11 @@ G.data.maps = {
       { x: 9, y: 7, sprite: 'kuma', cond: '!bearDown', script: 'bridge_bear' },
       { x: 11, y: 8, sprite: 'sign', script: [['say', '', '【この先 王都ガルディア】\n橋を渡って北へ。']] },
       { x: 11, y: 19, sprite: 'sign', script: [['say', '', '【街道】道の上は魔物が出にくい。\n草むらと森に入るときは用心を。']] },
-      { x: 3, y: 12, gather: 'gekko' },
+      { x: 3, y: 13, gather: 'gekko' },
+      { x: 0, y: 12, step: true, script: 'field_west' },
+      { x: 19, y: 12, step: true, script: 'field_east' },
+      { x: 2, y: 11, sprite: 'sign', script: [['say', '', '【西：落雷の野】\n近ごろ雷が多い。用のない者は近づかぬこと。']] },
+      { x: 17, y: 11, sprite: 'sign', script: [['say', '', '【東：森の奥】\n古い見張り塔あり。足もと注意。']] },
       { x: 6, y: 17, gather: 'gekko' },
       { x: 15, y: 18, gather: 'gekko' },
       { x: 2, y: 9, gather: 'gekko' },
@@ -155,7 +164,7 @@ G.data.maps = {
     name: '王城 謁見の間', dark: 0,
     rows: [
       '#########',
-      '###sTs###',
+      '##PsTs###',
       '#ssscsss#',
       '#ssscsss#',
       '#ssscsss#',
@@ -164,7 +173,8 @@ G.data.maps = {
       '####D####'
     ],
     ev: [
-      { x: 4, y: 7, step: true, script: [['warp', 'field', 9, 1, 'down']] },
+      { x: 4, y: 7, step: true, script: [['warp', 'capital', 7, 2, 'down']] },
+      { x: 2, y: 1, obj: true, script: 'portrait' },
       { x: 4, y: 2, sprite: 'king', script: 'king' },
       { x: 5, y: 3, sprite: 'liese', script: [['say', 'リーゼ', '陛下の御前です。……来てくださると、信じていました。']] },
       { x: 2, y: 4, sprite: 'guard', script: [['say', '近衛兵', '（槍を立てたまま、じっとこちらを見ている）']] },
@@ -289,6 +299,198 @@ G.data.maps = {
     ],
     ev: [
       { x: 3, y: 2, obj: true, script: 'altar' }
+    ]
+  },
+
+  // ---- 地上の各地（第一章の探検）----
+  woods: {
+    name: '森の奥', dark: 0.38,
+    enc: { f: ['ookumo', 'ookumo', 'kage', 'koumori'] },
+    rows: [
+      'tttttttttttttttt',
+      'tfffftHDHtffffft',
+      'tffffffffffffttt',
+      'tfftffffftfffftt',
+      'tffffttffffffftt',
+      'fffffffffttfffft',
+      'tfftfffffffffftt',
+      'tffffftffffftfft',
+      'ttfffffffftfffft',
+      'tfffftfffffffttt',
+      'tftfffffftffffft',
+      'tfffffffffffffft',
+      'tttttttttttttttt'
+    ],
+    ev: [
+      { x: 0, y: 5, step: true, script: [['warp', 'field', 18, 12, 'left']] },
+      { x: 7, y: 1, step: true, script: 'tower_enter' },
+      { x: 13, y: 7, gather: 'akami' },
+      { x: 3, y: 10, gather: 'akami' },
+      { x: 12, y: 3, gather: 'gekko' },
+      { x: 14, y: 11, sprite: 'chest', cond: '!chestWoods', script: [['give', 'kaen', 2], ['flag', 'chestWoods']] }
+    ]
+  },
+
+  tower: {
+    name: '古い見張り塔', dark: 0.25,
+    enc: { s: ['yuurei'] },
+    rows: [
+      '#########',
+      '#ssSSSss#',
+      '#sssssss#',
+      '####s####',
+      '#sssssss#',
+      '#s#sss#s#',
+      '#sssssss#',
+      '####D####'
+    ],
+    ev: [
+      { x: 4, y: 7, step: true, script: [['warp', 'woods', 7, 2, 'down']] },
+      { x: 4, y: 3, sprite: 'bantou', cond: '!towerDone', script: 'tower_guard' },
+      { x: 4, y: 1, obj: true, script: [['say', '', '壁に、すり減った紋章。交差した二本の剣。\nその下に、小さく名前が刻まれている。——「カイン」。']] },
+      { x: 7, y: 1, gather: 'nemuri', n: 1 },
+      { x: 1, y: 2, sprite: 'chest', cond: '!chestTower', script: [['say', '', '古い兵の背嚢。中身は、まだ使えそうだ。'], ['give', 'jou', 1], ['flag', 'chestTower']] }
+    ]
+  },
+
+  plain: {
+    name: '落雷の野', dark: 0.2,
+    enc: { z: ['koge', 'koge', 'tokage'] },
+    rows: [
+      'ttttttttt#D#tttttt',
+      'tzzzzzzzzzpzzzgggt',
+      'tzzrzzzzzzpzzggggt',
+      'tzzzzzrzzzpzzzgggt',
+      'tzzzzzzzzzpzrzgggt',
+      'tzrzzzzzzzpzzzzggt',
+      'tzzzzzzzzzpppppppp',
+      'tzzzzrzzzzpzzzgggt',
+      'tzzzzzzzzzpzzrgggt',
+      'tzzrzzzzzzpzzzzggt',
+      'tzzzzzzzzzpzzzgggt',
+      'tzzzzzzrzzpzzzgggt',
+      'ttttttttttpttttttt'
+    ],
+    ev: [
+      { x: 17, y: 6, step: true, script: [['warp', 'field', 1, 12, 'right']] },
+      { x: 10, y: 0, step: true, script: [['warp', 'mine', 6, 9, 'up']] },
+      { x: 10, y: 12, step: true, script: 'plain_south' },
+      { x: 4, y: 6, sprite: 'rairou', cond: '!rairouDown', script: 'plain_wolf' },
+      { x: 3, y: 5, sprite: 'rubble', script: [['say', '', '溶けて固まった炉。斧と、打ちかけの剣が、山になって焼けている。']] },
+      { x: 2, y: 7, sprite: 'rubble', script: [['say', '', '焼け落ちた木こり小屋。\nすぐ隣の森の木は、一本も焦げていない。']] },
+      { x: 12, y: 1, sprite: 'sign', script: [['say', '', '【北：ガラ鉱山】鉄と銀が出る。魔物も出る。\n【南：霧の湿地】立ち入るなら、二人以上で。']] },
+      { x: 2, y: 1, gather: 'raisho' },
+      { x: 7, y: 4, gather: 'raisho' },
+      { x: 6, y: 10, gather: 'raisho' },
+      { x: 4, y: 9, gather: 'raisho' },
+      { x: 15, y: 9, gather: 'gekko' },
+      { x: 16, y: 3, gather: 'gekko' }
+    ]
+  },
+
+  mine: {
+    name: 'ガラ鉱山', dark: 0.42,
+    enc: { s: ['iwakui', 'doukutsu', 'doukutsu'] },
+    rows: [
+      '#############',
+      '#sss#sssssss#',
+      '#sss#ss#ssss#',
+      '#ss###s#s##s#',
+      '#sssssss#sss#',
+      '#s##s###ssss#',
+      '#sssssss#s#s#',
+      '###s#sss#sss#',
+      '#sss#s#sssss#',
+      '#ssssssss#ss#',
+      '######D######'
+    ],
+    ev: [
+      { x: 6, y: 10, step: true, script: [['warp', 'plain', 10, 1, 'down']] },
+      { x: 1, y: 1, gather: 'tetsu' },
+      { x: 3, y: 4, gather: 'tetsu' },
+      { x: 1, y: 8, gather: 'tetsu' },
+      { x: 7, y: 7, gather: 'tetsu' },
+      { x: 11, y: 2, gather: 'gin' },
+      { x: 9, y: 6, gather: 'gin' },
+      { x: 11, y: 9, gather: 'gin' },
+      { x: 3, y: 1, sprite: 'chest', cond: '!chestMine', script: [['say', '', '鉱夫の忘れもの。'], ['give', 'kitsuke', 2], ['flag', 'chestMine']] }
+    ]
+  },
+
+  marsh: {
+    name: '霧の湿地', dark: 0.35,
+    enc: { m: ['doro', 'dokutake', 'doro'] },
+    rows: [
+      'ttttttttttpttttt',
+      'tmmmmmmmmmpmwwmt',
+      'tmwwmmmmmmpmwwmt',
+      'tmwwwmmmmppmmwmt',
+      'tmmmwmmmmpmmmmmt',
+      'tmmmmmmmppmmwwmt',
+      'twwmmmmppmmmwwmt',
+      'twwwmmmpmmmmmwmt',
+      'tmwmmmmpppppRRRt',
+      'tmmmmmmmmwwpHDHt',
+      'tmmmwwmmmmwppppt',
+      'tttttttttttttttt'
+    ],
+    ev: [
+      { x: 10, y: 0, step: true, script: [['warp', 'plain', 10, 11, 'up']] },
+      { x: 13, y: 9, step: true, script: [['warp', 'chapel', 4, 6, 'up']] },
+      { x: 14, y: 10, sprite: 'adventurer', cond: '!rescued', script: 'marsh_roy' },
+      { x: 2, y: 4, gather: 'gekko' },
+      { x: 6, y: 9, gather: 'gekko' },
+      { x: 13, y: 4, gather: 'akami' },
+      { x: 1, y: 10, sprite: 'chest', cond: '!chestMarsh', script: [['say', '', '泥に半分沈んだ箱。'], ['give', 'jou', 2], ['flag', 'chestMarsh']] }
+    ]
+  },
+
+  chapel: {
+    name: '沈んだ礼拝堂', dark: 0.3,
+    rows: [
+      '#########',
+      '#ssSSSss#',
+      '#sssssss#',
+      '####s####',
+      '#sssssss#',
+      '#swsssws#',
+      '#sssssss#',
+      '####D####'
+    ],
+    ev: [
+      { x: 4, y: 7, step: true, script: [['warp', 'marsh', 13, 10, 'down']] },
+      { x: 4, y: 3, sprite: 'nushi', cond: '!rescued', script: 'chapel_boss' },
+      { x: 7, y: 2, sprite: 'adventurer2', cond: '!rescued', script: [['say', 'ドーガ', 'う、動けん……。あの化け物を、なんとかしてくれ……。']] },
+      { x: 4, y: 1, obj: true, script: 'mural' }
+    ]
+  },
+
+  capital: {
+    name: '王都ガルディア', dark: 0.3,
+    rows: [
+      '################',
+      '#######D########',
+      'WggggggpgggggggW',
+      'WgRRRggpggRRRRgW',
+      'WgHHHggpggHHHHgW',
+      'WgggggppppgggggW',
+      'WgggggpggpgggggW',
+      'WgRRRgpggpgRRRgW',
+      'WgHHHgpggpgHHHgW',
+      'WggggppppppggggW',
+      'WggggggppggggggW',
+      'WWWWWWWppWWWWWWW'
+    ],
+    ev: [
+      { x: 7, y: 11, step: true, script: [['warp', 'field', 9, 1, 'down']] },
+      { x: 8, y: 11, step: true, script: [['warp', 'field', 10, 1, 'down']] },
+      { x: 7, y: 1, step: true, script: 'castle_enter' },
+      { x: 8, y: 2, sprite: 'guard', script: [['say', '近衛兵', '薬売りのカイン殿ですな。陛下がお待ちです。扉の奥へ。']] },
+      { x: 3, y: 5, sprite: 'smith', script: [['say', '王都の鍛冶', '昼も夜も、炉を止めるなとのお達しだ。\n鍬も鍋も後回し。打つのは剣と鏃ばかりさ。']] },
+      { x: 12, y: 5, sprite: 'townsman', script: [['say', '木こり', '北の森は、もう半分も残っちゃいない。炭にして炉にくべるんだと。\n……あの森で育ったんだがな、おれは。']] },
+      { x: 4, y: 9, sprite: 'girl', script: [['say', '女の子', '父さんね、兵隊さんになるの。となりの国へ行くんだって。\n雷がこわいから、行かないでって言ったのに。']] },
+      { x: 11, y: 9, sprite: 'merchant', script: [['say', '王都の商人', '王都の品だよ。田舎の行商とは物が違う。'], ['shop', 'capital']] },
+      { x: 13, y: 2, sprite: 'sign', script: [['say', '', '【布告】\n「雷に怯えるな。神などおらぬ。国の鉄は、国を守る」\n——ガルド王']] }
     ]
   }
 };

@@ -30,16 +30,40 @@
       case 'wait': await G.util.sleep(c[1]); break;
       case 'rest': G.menu.rest(); break;
       case 'equip': {
-        // 武器・防具を受け取って、その場で持ち替える
-        var eq = G.data.items[c[1]];
-        if (eq.type === 'weapon') s.weapon = c[1]; else s.armor = c[1];
-        ui.hud(); break;
+        // 武器・防具を受け取る。いまより強ければその場で持ち替える
+        var eq = G.data.items[c[1]], slot = eq.type === 'weapon' ? 'weapon' : 'armor', key = slot === 'weapon' ? 'atk' : 'def';
+        if (eq[key] > G.data.items[s[slot]][key]) {
+          s[slot] = c[1]; ui.hud();
+          await ui.say('', eq.name + ' を装備した。（' + (slot === 'weapon' ? '攻撃+' : '守り+') + eq[key] + '）');
+        } else {
+          await ui.say('', eq.name + ' を受け取った。\nいまの装備のほうが強いので、しまっておく。');
+        }
+        break;
       }
+      // 段階ごとに違う台詞。段階が並びより先なら最後のものを使う
+      case 'stage': return run(c[1][Math.min(s.stage, c[1].length - 1)]);
+      case 'setstage': s.stage = c[1]; break;
+      case 'memory': {
+        var mm = G.data.memories[c[1]];
+        if (s.mem.indexOf(c[1]) < 0) {
+          s.mem.push(c[1]);
+          await ui.fade('out');
+          await ui.say('', '【記憶　' + mm.title + '】\n' + mm.text);
+          await ui.fade('in');
+        }
+        break;
+      }
+      case 'forge': await G.menu.forge(); break;
       case 'join': s.flags[c[1]] = true; G.fullHeal(); ui.hud(); break;
       case 'dream': {
-        // はじめの数回だけ、過去の断片を順に見せる
-        var d = G.data.dreams[s.rests - 1];
-        if (d) await ui.say('', d);
+        // 地上では過去の夢を、空では姫の話を、物語が進んだぶんだけ順に見せる
+        if (s.flags.amelia) {
+          var tk = G.data.skyTalks[s.talks];
+          if (tk) { s.talks++; await run(tk); }
+        } else {
+          var d = G.data.dreams[s.dreams];
+          if (d && s.stage >= d.stage) { s.dreams++; await ui.say('', d.text); }
+        }
         break;
       }
       case 'brew': await G.menu.brew(); break;

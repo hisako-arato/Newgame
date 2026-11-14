@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>雲上のレクイエム</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Old+Mincho:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!--APP-->
+<div id="app">
+  <div id="stage">
+    <canvas id="view" width="176" height="176"></canvas>
+    <div id="mapname"></div>
+  </div>
+  <div id="panel">
+    <div id="goal"></div>
+    <div id="stat"></div>
+    <button id="btnMenu" type="button">メニュー</button>
+  </div>
+  <div id="fade"></div>
+
+  <div id="battle" hidden>
+    <div id="bName"></div>
+    <div id="bHp"><div id="bHpBar"></div></div>
+    <div id="bEnemy"><canvas id="bCanvas" width="64" height="64"></canvas></div>
+    <div id="bLog"></div>
+    <div id="bHero"></div>
+  </div>
+
+  <div id="msg" hidden>
+    <div id="msgName"></div>
+    <div id="msgText"></div>
+    <div id="msgNext">▼</div>
+  </div>
+  <div id="list" hidden></div>
+  <div id="flashFx"></div>
+
+  <div id="card" hidden></div>
+  <div id="title">
+    <div class="moon"></div>
+    <p class="lead">不死の剣聖と、空の姫</p>
+    <h1>雲上のレクイエム</h1>
+    <p class="chapter">第一章　四百年目の夜</p>
+    <div class="titleBtns">
+      <button id="btnContinue" type="button">つづきから</button>
+      <button id="btnNew" type="button">はじめから</button>
+    </div>
+  </div>
+</div>
+<!--/APP-->
+<script src="js/core.js"></script>
+<script src="data/items.js"></script>
+<script src="data/monsters.js"></script>
+<script src="data/maps.js"></script>
+<script src="data/story.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/script.js"></script>
+<script src="js/field.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

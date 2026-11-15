@@ -314,7 +314,9 @@
       if (PEOPLE[name]) { paint(c, humanArt(dir || 'down', frame), PEOPLE[name], px, py, 1); return; }
       if (THINGS[name]) { paint(c, THINGS[name].art, THINGS[name].pal, px, py, 1); return; }
       var m = G.data.monsters[name];
-      if (m) paint(c, artOf(m), m.pal, px, py, 1);
+      // 人の姿の魔物は、人の絵で描く
+      if (m && m.person) paint(c, humanArt(dir || 'down', frame), PEOPLE[m.person], px, py, 1);
+      else if (m) paint(c, artOf(m), m.pal, px, py, 1);
     },
     drawMonster: function (c, id, sc) {
       var m = G.data.monsters[id];

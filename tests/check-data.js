@@ -62,6 +62,9 @@ test('人・物・踏む出来事は歩ける場所にあり、絵が用意さ�
       if (e.obj && S.walkable(t)) bad(at + ' の「調べる」は通れない地形に置く');
       var name = e.sprite || e.gather;
       if (name && !S.PEOPLE[name] && !S.THINGS[name] && !D.monsters[name]) bad(at + ' の絵「' + name + '」がない');
+      // 魔物を地図に置くとき、その絵が実際に取り出せること（借りる先や、人の絵があること）
+      var mm = D.monsters[name];
+      if (mm && !mm.art && !(mm.like && D.monsters[mm.like] && D.monsters[mm.like].art) && !(mm.person && S.PEOPLE[mm.person])) bad(at + ' の魔物「' + name + '」は描けない');
       if (e.gather && !D.items[e.gather]) bad(at + ' の採集物「' + e.gather + '」がない');
       if (!e.gather && !e.script) bad(at + ' に script がない');
     });

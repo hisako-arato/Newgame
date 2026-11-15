@@ -3,12 +3,25 @@
 不老不死の元・剣聖が、死に方を探して空へ昇る RPG。スマホの縦持ちで遊ぶ。
 全三章。**第一章**（隠れ家 → 酒場 → 街道 → 王城 → 空）、**第二章**（廃都の広場 → 空中庭園 → 王家の書庫 → 玉座）、**第三章**（地上の軍との戦い → 正門 → 隠された祭壇 → 結末）。
 
+## アプリとして入れる（スマホ）
+
+https://unjou-requiem.haruki-rog.workers.dev を開き、ブラウザのメニューから入れる。
+
+- **Android（Chrome）**：︙ →「アプリをインストール」（または「ホーム画面に追加」）
+- **iPhone（Safari）**：共有ボタン →「ホーム画面に追加」
+
+ホーム画面のアイコンから開くと、ブラウザの枠のない全画面で遊べる。
+一度開けば、あとは電波がなくても遊べる（文字の形は、2回目に開いたときから電波なしでも同じになる）。
+記録はその端末の中だけに残る。
+
 ## 遊び方
 
-- `index.html` をブラウザで開く（ダブルクリックでも動く）
-- 行きたい場所をタップすると歩く。人や物をタップすると近寄って話す・調べる
-- PC では矢印キーで歩き、Enter で話す・台詞を送る、Esc でメニュー
-- 記録は端末のブラウザの中に自動で残る（「つづきから」で再開）
+- 画面に指を置いたまま、すべらせた向きに歩く。指を離すと止まる
+- 人や物をタップすると、近寄って話す・調べる。それ以外の場所をタップすると、向いている先を調べる
+- 台詞は、画面のどこをタップしても次へ進む
+- ブラウザで遊ぶときは「はじめから」「つづきから」で全画面になる（できる端末だけ。メニューで切り替えられる）
+- PC では矢印キーで歩き、Enter で話す・台詞を送る、Esc でメニュー、F で全画面
+- `index.html` をブラウザで直接開いても遊べる（ダブルクリックでも動く）
 
 ### 流れ
 第一章は、酒場に通う夜と、各地の探検を交互に進める。迷ったら、夜の酒場でバロウに「話す」。
@@ -40,6 +53,10 @@
 | `js/` | 仕組み。歩く画面（`field.js`）、命令の実行（`script.js`）、戦闘（`battle.js`）、メニュー・店（`menu.js`）、絵（`sprites.js`） |
 | `css/style.css` | 見た目 |
 | `tests/check-data.js` | データの打ち間違いを拾う検査。`node tests/check-data.js` |
+| `manifest.webmanifest`・`sw.js` | アプリとして入れるための設定と、電波なしで遊ぶための入れ物 |
+| `assets/icons/` | アプリのアイコン。`node tools/make-icons.js` で作り直す |
+| `tools/build-pages.js` | 公開する物だけを `dist/` に集める（設定ノートは入れない） |
+| `.github/workflows/deploy.yml` | `main` に push すると Cloudflare に上げる |
 | `tools/build-single.js` | 1ファイルにまとめた版を作る。`node tools/build-single.js 出力先.html` |
 | `STORY.md` | 設定ノート（ネタばらしを含む） |
 
@@ -52,3 +69,16 @@
 - **酒場の夜を足す**：`data/story.js` の `bar_master` の `stage` に段を足し、`night○` を書く。常連の台詞も `stage` で段ごとに変える
 - **記憶・夢・姫の話を足す**：`data/story.js` の `memories`・`dreams`・`skyTalks`
 - **依頼・薬・装備を足す**：`data/story.js` の `quests`、`data/items.js`
+
+## 公開のしかた（Cloudflare）
+
+`main` に push すると、GitHub Actions が `dist/` を Cloudflare に上げる（https://unjou-requiem.haruki-rog.workers.dev）。
+はじめに一度だけ、GitHub の Newgame リポジトリの Settings → Secrets and variables → Actions に
+`CLOUDFLARE_API_TOKEN` を入れる（haitomoshibi に入れたものと同じでよい）。入っていないあいだは、検査だけして上げない。
+
+手で上げるときは：
+
+```
+node tools/build-pages.js
+npx wrangler deploy
+```

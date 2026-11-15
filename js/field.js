@@ -1,6 +1,9 @@
 // 歩く画面。タップした場所まで道を探して歩き、人や物をタップすると近寄って話す
 (function () {
+  // 画面いっぱいに描く。短いほうの辺に VIEW ドット（11マス）が入るように拡大し、長いほうは画面の比に合わせて伸ばす
   var T = 16, VIEW = 176, STEP_MS = 130;
+  var VW = VIEW, VH = VIEW;
+  var DRAG = 14;   // これ以上指が動いたら「すべらせた」とみなす（CSSピクセル）
   var DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   var cv, ctx, map, bg, camX = 0, camY = 0;
 
@@ -11,12 +14,62 @@
 
     init: function () {
       cv = G.util.$('view'); ctx = cv.getContext('2d');
+      F.resize();
+      window.addEventListener('resize', F.resize);
+      F.touch(G.util.$('stage'));
+    },
+
+    // 画面の大きさに合わせて、描くドット数を決め直す
+    resize: function () {
+      var w = window.innerWidth || VIEW, h = window.innerHeight || VIEW, sc = Math.min(w, h) / VIEW;
+      VW = Math.round(w / sc); VH = Math.round(h / sc);
+      cv.width = VW; cv.height = VH;
       ctx.imageSmoothingEnabled = false;
-      cv.addEventListener('pointerdown', function (e) {
-        var r = cv.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width * VIEW + camX, py = (e.clientY - r.top) / r.height * VIEW + camY;
-        F.tap(Math.floor(px / T), Math.floor(py / T));
+    },
+
+    // 指の操作。触れたところを中心に、すべらせた向きへ歩き続ける（指を離すと止まる）。
+    // すべらせずに離したら「タップ」：人や物なら近寄って話す・調べる。それ以外は向いている先を調べる
+    stick: null,
+    touch: function (el) {
+      var st = null, ring = G.util.$('stick'), knob = G.util.$('stickKnob');
+      function show(x, y, kx, ky) {
+        ring.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        knob.style.transform = 'translate(' + kx + 'px,' + ky + 'px)';
+      }
+      el.addEventListener('pointerdown', function (e) {
+        // 台詞が出ているあいだは、どこを触っても次へ送る
+        if (G.ui.confirm()) return;
+        if (!F.active || st) return;
+        st = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false, t: Date.now() };
+        try { el.setPointerCapture(e.pointerId); } catch (err) { /* 古いブラウザ */ }
+        show(st.x, st.y, 0, 0);
+        e.preventDefault();
       });
+      el.addEventListener('pointermove', function (e) {
+        if (!st || e.pointerId !== st.id) return;
+        var dx = e.clientX - st.x, dy = e.clientY - st.y, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < DRAG) { F.stick = null; show(st.x, st.y, dx, dy); return; }
+        if (!st.moved) { st.moved = true; ring.hidden = false; F.path = []; F.target = null; F.mark = null; }
+        F.stick = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+        var k = Math.min(1, 36 / d);
+        show(st.x, st.y, dx * k, dy * k);
+      });
+      function end(e) {
+        if (!st || e.pointerId !== st.id) return;
+        var tap = !st.moved && Date.now() - st.t < 500, x = st.x, y = st.y;
+        st = null; F.stick = null; ring.hidden = true;
+        if (tap) F.tapScreen(x, y);
+      }
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointercancel', end);
+    },
+    tapScreen: function (cx, cy) {
+      if (!F.active || F.busy) return;
+      var r = cv.getBoundingClientRect();
+      var tx = Math.floor(((cx - r.left) / r.width * VW + camX) / T), ty = Math.floor(((cy - r.top) / r.height * VH + camY) / T);
+      var e = F.eventAt(tx, ty, false);
+      if (e && (F.solid(e) || !G.sprites.walkable(F.tile(tx, ty)))) F.tap(tx, ty);
+      else F.action();
     },
 
     enter: function (id) {
@@ -171,6 +224,7 @@
         return;
       }
       if (F.busy) return;
+      if (F.stick) { F.tryMove(F.stick); return; }
       if (F.path.length) {
         if (!F.tryMove(F.path.shift())) { F.path = []; F.target = null; F.mark = null; }
         return;
@@ -184,10 +238,10 @@
       var hx = (m ? m.fx + (m.tx - m.fx) * m.t : s.x) * T, hy = (m ? m.fy + (m.ty - m.fy) * m.t : s.y) * T;
       var mw = map.rows[0].length * T, mh = map.rows.length * T;
       // 地図が画面より小さいときは真ん中に置く
-      camX = mw <= VIEW ? -(VIEW - mw) / 2 : G.util.clamp(hx - 80, 0, mw - VIEW);
-      camY = mh <= VIEW ? -(VIEW - mh) / 2 : G.util.clamp(hy - 80, 0, mh - VIEW);
+      camX = mw <= VW ? -(VW - mw) / 2 : G.util.clamp(hx + 8 - VW / 2, 0, mw - VW);
+      camY = mh <= VH ? -(VH - mh) / 2 : G.util.clamp(hy + 8 - VH / 2, 0, mh - VH);
       camX = Math.round(camX); camY = Math.round(camY);
-      ctx.fillStyle = '#0b0d16'; ctx.fillRect(0, 0, VIEW, VIEW);
+      ctx.fillStyle = '#0b0d16'; ctx.fillRect(0, 0, VW, VH);
       ctx.drawImage(bg, -camX, -camY);
 
       var list = F.events().filter(function (e) { return e.sprite || e.gather; })
@@ -205,7 +259,7 @@
         G.sprites.draw(ctx, o.name, Math.round(o.x) - camX, Math.round(o.y) - camY - (o.hero ? 0 : 0), o.dir, o.frame);
       });
 
-      if (map.dark) { ctx.fillStyle = 'rgba(14,18,60,' + map.dark + ')'; ctx.fillRect(0, 0, VIEW, VIEW); }
+      if (map.dark) { ctx.fillStyle = 'rgba(14,18,60,' + map.dark + ')'; ctx.fillRect(0, 0, VW, VH); }
       if (F.mark) {
         var a = 0.5 + 0.4 * Math.sin(F.t / 120);
         ctx.strokeStyle = 'rgba(255,225,130,' + a + ')'; ctx.lineWidth = 1;

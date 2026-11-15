@@ -1,0 +1,11 @@
+// Cloudflare に上げる設定。公開するのは tools/build-pages.js が集めた dist/ だけ。
+// リポジトリ全体（"."）を指すと、STORY.md（物語のネタばらし）まで公開されてしまう
+//   node tools/build-pages.js
+//   npx wrangler deploy
+{
+  "name": "unjou-requiem",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}

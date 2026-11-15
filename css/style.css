@@ -1,4 +1,4 @@
-/* 縦持ちのスマホ1画面。上に歩く画面、下に目的とメニュー。台詞と選択肢は下から重ねる */
+/* 縦持ちのスマホを画面いっぱいに使う。地図を全面に描き、目的とメニューは上、台詞と選択肢は下に重ねる */
 :root {
   color-scheme: dark;
   --night: #0b0d16;      /* 地 */
@@ -24,37 +24,56 @@ body {
 button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
 
-#app {
-  position: relative; box-sizing: border-box; height: 100%; max-width: 480px; margin: 0 auto;
-  padding-block: 10px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: flex; flex-direction: column; gap: 10px;
+/* 画面いっぱいに地図を描き、目的・強さ・メニューは上に重ねる */
+#app { position: fixed; inset: 0; overflow: hidden; }
+
+#stage { position: absolute; inset: 0; touch-action: none; }
+#view { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+#hud {
+  position: absolute; z-index: 2; left: 0; right: 0; top: 0; box-sizing: border-box;
+  display: flex; align-items: flex-start; gap: 10px;
+  padding-top: max(8px, env(safe-area-inset-top, 0px)); padding-bottom: 10px;
+  padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px));
+  background: linear-gradient(rgba(11, 13, 22, .85), rgba(11, 13, 22, .55) 70%, rgba(11, 13, 22, 0));
+  pointer-events: none;
+}
+#hudText { flex: 1; min-width: 0; }
+#goal { color: var(--line); font-size: 14px; line-height: 1.45; }
+#stat { color: var(--ink); opacity: .85; font-size: 13px; line-height: 1.45; font-variant-numeric: tabular-nums; white-space: pre-line; }
+#btnMenu {
+  pointer-events: auto; flex: none; min-height: 44px; padding: 0 16px;
+  background: rgba(21, 26, 44, .9); border: 2px solid var(--line);
 }
 
-#stage { position: relative; width: min(100%, 56vh); aspect-ratio: 1; max-width: 100%; margin: 0 auto; flex: none; border: 2px solid var(--line); box-sizing: border-box; }
-#view { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
 #mapname {
-  position: absolute; left: 0; top: 8px; padding: 2px 12px; background: rgba(11, 13, 22, .8);
+  position: absolute; z-index: 2; left: 0; top: max(96px, calc(env(safe-area-inset-top, 0px) + 88px));
+  padding: 2px 12px 2px max(12px, env(safe-area-inset-left, 0px)); background: rgba(11, 13, 22, .8);
   border-right: 2px solid var(--line); font-size: 14px; opacity: 0; pointer-events: none;
 }
 #mapname.show { animation: mapname 2.4s ease-out; }
 @keyframes mapname { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
 
-#panel { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
-#goal { color: var(--line); font-size: 15px; }
-#stat { color: var(--dim); font-size: 14px; font-variant-numeric: tabular-nums; white-space: pre-line; }
-#btnMenu { margin-top: auto; align-self: flex-end; min-height: 44px; padding: 0 22px; background: var(--panel); border: 2px solid var(--line); }
+/* 指を置いたところに出る輪。輪の中心から指をすべらせた向きへ歩く */
+#stick {
+  position: absolute; z-index: 4; left: -44px; top: -44px; width: 88px; height: 88px; border-radius: 50%;
+  border: 2px solid rgba(201, 165, 68, .55); background: rgba(11, 13, 22, .25); pointer-events: none;
+}
+#stickKnob {
+  position: absolute; left: 26px; top: 26px; width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(201, 165, 68, .6);
+}
 
 #fade { position: absolute; inset: 0; background: var(--night); opacity: 0; pointer-events: none; transition: opacity 450ms linear; z-index: 3; }
 
 /* 台詞の窓・選択肢。戦闘の上にも出るので、いちばん手前の層に置く */
 #msg, #list {
-  position: absolute; z-index: 25; box-sizing: border-box; bottom: 10px;
-  left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  position: absolute; z-index: 25; box-sizing: border-box; bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+  max-width: 600px; margin: 0 auto;
   background: var(--panel); border: 2px solid var(--line); padding: 12px 14px;
 }
-#msg { min-height: 30%; cursor: pointer; }
+#msg { min-height: 26%; cursor: pointer; }
 #msgText { white-space: pre-wrap; }
 #msg.nar { font-family: var(--f-tale); font-size: 17px; line-height: 1.9; background: var(--night); }
 #msgName { color: var(--line); margin-bottom: 4px; }
@@ -77,10 +96,11 @@ button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
 /* 戦闘。下は行動の選択肢が重なるぶん空けておく */
 #battle {
   position: absolute; inset: 0; z-index: 5; box-sizing: border-box;
-  padding: 16px max(16px, env(safe-area-inset-left, 0px)) 236px;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 236px max(16px, env(safe-area-inset-left, 0px));
   background: linear-gradient(#141a36, #0b0d16 70%);
   display: flex; flex-direction: column; gap: 8px;
 }
+#battle > * { width: 100%; max-width: 600px; margin-inline: auto; box-sizing: border-box; }
 #bName { text-align: center; font-size: 18px; }
 #bHp { height: 8px; width: 60%; margin: 0 auto; background: #2a2f48; border: 1px solid #555c80; }
 #bHpBar { height: 100%; width: 100%; background: var(--blood); transition: width .25s; }

@@ -30,12 +30,16 @@
       if (!G.field.active || G.field.busy) return;
       G.field.run(async function () {
         for (;;) {
-          var i = await ui.list('メニュー', [{ label: 'つよさ' }, { label: 'もちもの' }, { label: '依頼' }, { label: 'きろくする' }, { label: '記憶', sub: '思い出したこと ' + G.state.mem.length + '/' + Object.keys(G.data.memories).length }], { cancelLabel: 'とじる' });
+          var opts = [{ label: 'つよさ' }, { label: 'もちもの' }, { label: '依頼' }, { label: 'きろくする' }, { label: '記憶', sub: '思い出したこと ' + G.state.mem.length + '/' + Object.keys(G.data.memories).length }];
+          // 全画面にできる端末だけ、切り替えを出す
+          if (G.fullscreen.can()) opts.push({ label: G.fullscreen.on() ? '全画面をやめる' : '全画面にする' });
+          var i = await ui.list('メニュー', opts, { cancelLabel: 'とじる' });
           if (i < 0) return;
           if (i === 0) await G.menu.status();
           if (i === 1) await G.menu.items();
           if (i === 2) await G.menu.questLog();
           if (i === 4) await G.menu.memories();
+          if (i === 5) { G.fullscreen.toggle(); return; }
           if (i === 3) await ui.say('', G.save() ? '記録した。（歩いているあいだも自動で記録されます）' : 'この端末では記録できなかった。');
         }
       });

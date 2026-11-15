@@ -173,5 +173,17 @@ test('調合・店・依頼・初期の持ち物が、ある道具と魔物を�
   if (!S.walkable(tile(s.map, s.x, s.y))) bad('開始位置が歩けない');
 });
 
+test('アプリとして公開する物に、ゲームが読むファイルがすべて入っていて、設定ノートは入っていない', function (bad) {
+  var B = require(path.join(root, 'tools/build-pages.js'));
+  var html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  B.referenced(html).forEach(function (u) {
+    if (!fs.existsSync(path.join(root, u))) bad('index.html が読む ' + u + ' がない');
+    if (!B.PUBLIC.some(function (p) { return u === p || u.indexOf(p + '/') === 0; })) bad(u + ' が tools/build-pages.js の PUBLIC に入っていない');
+  });
+  ['STORY.md', 'CLAUDE.md', 'README.md', '.'].forEach(function (f) { if (B.PUBLIC.indexOf(f) >= 0) bad(f + ' を公開してはいけない'); });
+  var mf = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
+  mf.icons.forEach(function (ic) { if (!fs.existsSync(path.join(root, ic.src))) bad('アイコン ' + ic.src + ' がない'); });
+});
+
 console.log(fails ? '\n' + fails + ' 件の FAIL' : '\nすべて PASS');
 process.exit(fails ? 1 : 0);

@@ -28,11 +28,21 @@ jobs:
         run: node tools/build-pages.js
       - name: Cloudflare に上げる
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 62b2208f5b8cb3f0933d82e0fd012db9
         run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+          if [ -z "$RAW_TOKEN" ]; then
             echo "CLOUDFLARE_API_TOKEN がまだ無いので、上げずに終わる"
             exit 0
           fi
+          # 貼るときに紛れこんだ空白・改行を取り除く（スマホで写すと入りやすい）
+          CLOUDFLARE_API_TOKEN="$(printf '%s' "$RAW_TOKEN" | tr -d '[:space:]')"
+          export CLOUDFLARE_API_TOKEN
+          echo "::add-mask::$CLOUDFLARE_API_TOKEN"
+          # 上げる前に、トークンが使えるかを Cloudflare に問い合わせる（中身は出さない。断られたら理由だけ出す）
+          echo "トークンの長さ: ${#CLOUDFLARE_API_TOKEN} 文字（空白を除いた分。ふつうは40文字前後）"
+          for url in "https://api.cloudflare.com/client/v4/user/tokens/verify" "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify"; do
+            echo "問い合わせ: $url"
+            curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$url" | node -e 'let t="";process.stdin.on("data",d=>t+=d).on("end",()=>{try{const j=JSON.parse(t);console.log("  使える:",j.success,"/ 状態:",(j.result||{}).status||"-","/ 理由:",JSON.stringify(j.errors||[]))}catch(e){console.log("  応答を読めなかった")}})'
+          done
           npx -y wrangler@4 deploy

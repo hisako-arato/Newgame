@@ -29,7 +29,6 @@ jobs:
       - name: Cloudflare に上げる
         env:
           RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: 62b2208f5b8cb3f0933d82e0fd012db9
         run: |
           if [ -z "$RAW_TOKEN" ]; then
             echo "CLOUDFLARE_API_TOKEN がまだ無いので、上げずに終わる"
@@ -39,10 +38,16 @@ jobs:
           CLOUDFLARE_API_TOKEN="$(printf '%s' "$RAW_TOKEN" | tr -d '[:space:]')"
           export CLOUDFLARE_API_TOKEN
           echo "::add-mask::$CLOUDFLARE_API_TOKEN"
-          # 上げる前に、トークンが使えるかを Cloudflare に問い合わせる（中身は出さない。断られたら理由だけ出す）
-          echo "トークンの長さ: ${#CLOUDFLARE_API_TOKEN} 文字（空白を除いた分。ふつうは40文字前後）"
-          for url in "https://api.cloudflare.com/client/v4/user/tokens/verify" "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify"; do
-            echo "問い合わせ: $url"
-            curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$url" | node -e 'let t="";process.stdin.on("data",d=>t+=d).on("end",()=>{try{const j=JSON.parse(t);console.log("  使える:",j.success,"/ 状態:",(j.result||{}).status||"-","/ 理由:",JSON.stringify(j.errors||[]))}catch(e){console.log("  応答を読めなかった")}})'
-          done
+          api() { curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4$1"; }
+          # トークンが使えるか、どのアカウントに使えるかを先に確かめる（トークンの中身は出さない）
+          api /user/tokens/verify | node -e 'let t="";process.stdin.on("data",d=>t+=d).on("end",()=>{const j=JSON.parse(t);console.log("トークン:",j.success?"有効":"無効",JSON.stringify(j.errors||[]))})'
+          # アカウントの番号は書きこまず、トークンで見えるアカウントを使う
+          # （書きこんだ番号とトークンのアカウントが食いちがって、2026-11-15 に「認証エラー」で止まったため）
+          CLOUDFLARE_ACCOUNT_ID="$(api '/accounts?per_page=50' | node -e 'let t="";process.stdin.on("data",d=>t+=d).on("end",()=>{const j=JSON.parse(t);const a=j.result||[];console.error("このトークンで見えるアカウント: "+a.length+" 件"+(j.success?"":" "+JSON.stringify(j.errors)));a.forEach(x=>console.error("  - "+x.name+"（"+x.id+"）"));if(a.length)console.log(a[0].id)})')"
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::このトークンで使えるアカウントがない。Cloudflare でトークンを作るとき、Account Resources に自分のアカウントを入れる"
+            exit 1
+          fi
+          export CLOUDFLARE_ACCOUNT_ID
+          echo "上げる先のアカウント: $CLOUDFLARE_ACCOUNT_ID"
           npx -y wrangler@4 deploy

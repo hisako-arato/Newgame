@@ -73,8 +73,20 @@ https://unjou-requiem.haruki-rog.workers.dev を開き、ブラウザのメニ�
 ## 公開のしかた（Cloudflare）
 
 `main` に push すると、GitHub Actions が `dist/` を Cloudflare に上げる（https://unjou-requiem.haruki-rog.workers.dev）。
-はじめに一度だけ、GitHub の Newgame リポジトリの Settings → Secrets and variables → Actions に
-`CLOUDFLARE_API_TOKEN` を入れる（haitomoshibi に入れたものと同じでよい）。入っていないあいだは、検査だけして上げない。
+はじめに一度だけ、GitHub の Secrets に `CLOUDFLARE_API_TOKEN` を入れる。入っていないあいだは、検査だけして上げない。
+
+1. Cloudflare のダッシュボード（https://dash.cloudflare.com）→ 右上の人のアイコン → **My Profile** → **API Tokens** → **Create Token**
+2. テンプレート **Edit Cloudflare Workers** の **Use template** → そのまま **Continue to summary** → **Create Token**。
+   出てきたトークンを写す（この画面でしか見られない）。haitomoshibi 用に作ったトークンが手元にあれば、それを使ってもよい
+3. GitHub の Newgame リポジトリ → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**。
+   Name に `CLOUDFLARE_API_TOKEN`、Secret にトークンを貼って **Add secret**
+4. **Actions** タブ → **deploy** → **Run workflow** で、すぐに上げられる（以後は main に push するたびに自動）
+
+PC の PowerShell からなら、3 の代わりに次でもよい（聞かれたらトークンを貼る）：
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\GitHubCLI\bin\gh.exe" secret set CLOUDFLARE_API_TOKEN -R hisako-arato/Newgame
+```
 
 手で上げるときは：
 

@@ -58,7 +58,8 @@
         'HP ' + s.hp + '/' + st.maxhp + '　SP ' + s.sp + '/' + st.maxsp + '\n' +
         '攻撃 ' + st.atk + '（' + IT(s.weapon).name + '）　守り ' + st.def + '（' + IT(s.armor).name + '）\n' +
         'わざ：' + sk + '\n' +
-        '死ねなかった回数：' + s.deaths);
+        // 一度も倒れていないうちは出さない（倒れて初めて、死なないと分かるように）
+        (s.deaths ? '死ねなかった回数：' + s.deaths : '……'));
       var mates = G.party().slice(1);
       for (var m = 0; m < mates.length; m++) {
         var id = mates[m], at = G.statsOf(id);

@@ -21,6 +21,7 @@ G.newState = function () {
     auto: false,       // 仲間の行動をおまかせにするか
     stage: 0,          // 第一章の進み具合（酒場の夜が何回目まで進んだか）
     mem: [],           // 思い出した記憶
+    ltalks: 0, ltalkDay: -1,   // 隠れ家でのリコとの会話が何番目まで進んだか・最後に話した日
     dreams: 0, talks: 0,   // 見た夢・空で聞いた姫の話の数
     deaths: 0, rests: 0, goal: ''
   };

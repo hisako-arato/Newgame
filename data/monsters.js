@@ -140,6 +140,12 @@ G.data.monsters = {
   },
 
   // ---- 地上の各地。like は絵を借りる魔物（色だけ変える）----
+  tsuru:   { name: 'つる草人形', like: 'numeri', hp: 40, atk: 16, def: 4, exp: 18, gold: 10, weak: 'fire', drops: [{ item: 'gekko', rate: 0.4 }],
+    pal: { a: '#3f7a3a', b: '#5aa04a', c: '#2f5a2c', d: '#234420', e: '#ffe14a', f: '#c8f08a' } },
+  hanaga:  { name: '花蛾', like: 'koumori', hp: 34, atk: 18, def: 3, exp: 20, gold: 12, weak: 'ice', drops: [{ item: 'akami', rate: 0.3 }],
+    pal: { a: '#d98ab0', b: '#a85a80', c: '#f6c8dc', e: '#2a1a2a', f: '#fff' } },
+  ooga:    { name: '谷の大蛾', like: 'koumori', hp: 200, atk: 25, def: 6, exp: 110, gold: 90, weak: 'ice', charge: 0.25, boss: true, drops: [{ item: 'akami', rate: 1 }],
+    pal: { a: '#c8a84a', b: '#8a6a2a', c: '#f4e6a0', e: '#e23a3a', f: '#fff' } },
   ookumo:  { name: '森蜘蛛', like: 'numeri', hp: 55, atk: 20, def: 6, exp: 26, gold: 16, weak: 'fire', drops: [{ item: 'akami', rate: 0.3 }],
     pal: { a: '#3a3a2a', b: '#5a5a3a', c: '#2a2a1c', d: '#1c1c12', e: '#e23a3a', f: '#c8c88a' } },
   yuurei:  { name: '亡霊兵', like: 'yoroi', hp: 60, atk: 22, def: 10, exp: 32, gold: 20, weak: 'fire', drops: [{ item: 'kiba', rate: 0.2 }],

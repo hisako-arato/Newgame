@@ -53,7 +53,7 @@ G.data.skills = [
   { id: 'niren',     name: '二連斬り',   lv: 2, sp: 3,  kind: 'multi', hits: 2, rate: 0.7, desc: 'すばやく二度斬る' },
   { id: 'kabuto',    name: '兜割り',     lv: 3, sp: 5,  kind: 'break', rate: 1.5, desc: '強く斬り、相手の守りを下げる' },
   { id: 'iyashi',    name: '癒やしの水', lv: 4, sp: 6,  kind: 'heal', rate: 0.45, desc: 'HPを大きく回復する' },
-  { id: 'issen',     name: '剣聖の一閃', lv: 6, sp: 10, kind: 'slash', rate: 2.5, desc: '四百年前の一太刀' },
+  { id: 'issen',     name: '無銘の一閃', lv: 6, sp: 10, kind: 'slash', rate: 2.5, desc: '身体が覚えていた一太刀' },
   // who があるものは仲間の技。リコは薬師の見習い：氷の魔法と、味方を助ける薬
   { id: 'tsubute',   name: '氷のつぶて', who: 'riko', lv: 1, sp: 3, kind: 'magic', elem: 'ice', pow: 9, desc: '氷の魔法。狼やコウモリによく効く' },
   { id: 'teate',     name: '応急手当',   who: 'riko', lv: 1, sp: 4, kind: 'heal', rate: 0.3, desc: 'ひとりのHPを回復する' },

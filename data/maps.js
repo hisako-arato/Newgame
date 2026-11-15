@@ -321,11 +321,12 @@ G.data.maps = {
       'tfffftfffffffttt',
       'tftfffffftffffft',
       'tfffffffffffffft',
-      'tttttttttttttttt'
+      'ttttttttfttttttt'
     ],
     ev: [
       { x: 0, y: 5, step: true, script: [['warp', 'field', 18, 12, 'left']] },
       { x: 7, y: 1, step: true, script: 'tower_enter' },
+      { x: 8, y: 12, step: true, script: 'woods_south' },
       { x: 13, y: 7, gather: 'akami' },
       { x: 3, y: 10, gather: 'akami' },
       { x: 12, y: 3, gather: 'gekko' },
@@ -493,6 +494,72 @@ G.data.maps = {
       { x: 4, y: 9, sprite: 'girl', script: [['say', '女の子', '父さんね、兵隊さんになるの。となりの国へ行くんだって。\n雷がこわいから、行かないでって言ったのに。']] },
       { x: 11, y: 9, sprite: 'merchant', script: [['say', '王都の商人', '王都の品だよ。田舎の行商とは物が違う。'], ['shop', 'capital']] },
       { x: 13, y: 2, sprite: 'sign', script: [['say', '', '【布告】\n「雷に怯えるな。神などおらぬ。国の鉄は、国を守る」\n——ガルド王']] }
+    ]
+  },
+
+  // 三年前の冬の夜（一夜目のあとの回想）。街と同じ形で、出口も店もない
+  past: {
+    name: '三年前のミルテ', dark: 0.5,
+    rows: [
+      'WWWWWWWWWWWWWWWWWW',
+      'WgggggggppgggggggW',
+      'WgRRRRRgppgRRRRRgW',
+      'WgRRRRRgppgRRRRRgW',
+      'WgHHHHHgppgHHHHHgW',
+      'WgggpgggppgggpgggW',
+      'WgppppppppppppppgW',
+      'WgggggggppgggggggW',
+      'WgtgggggppggggtggW',
+      'WgggggggppgggggggW',
+      'WgRRRRggppggRRRRgW',
+      'WgHHHHggppggHHHHgW',
+      'WgggggggppgggggggW',
+      'WgggppppppggggggtW',
+      'WgggpgggggggtggggW',
+      'WtttpttgggggggRRRW',
+      'WtggpgtggtggggHHHW',
+      'WtMgggtgggggggggtW',
+      'WttttttggtgggggggW',
+      'WWWWWWWWWWWWWWWWWW'
+    ],
+    ev: [
+      { x: 3, y: 11, obj: true, script: 'past_a' },
+      { x: 13, y: 11, obj: true, script: 'past_b' },
+      { x: 15, y: 16, obj: true, script: 'past_riko' },
+      { x: 4, y: 4, obj: true, script: [['say', '', '酒場は閉まっている。病が広がってから、誰も飲みに来ない。']] },
+      { x: 13, y: 4, obj: true, script: [['say', '', 'ギルドの戸に、貼り紙。「薬師求む。報酬は言い値」']] }
+    ]
+  },
+
+  valley: {
+    name: '薬草の谷', dark: 0.15,
+    enc: { g: ['tsuru', 'hanaga', 'tsuru'] },
+    rows: [
+      'ttttttttfttttttt',
+      'tggggggfffgggggt',
+      'tgtgggggfggggtgt',
+      'tggggtggfgggggwt',
+      'tgggggggffggggwt',
+      'twwgggtggfgggggt',
+      'twwggggggfggtggt',
+      'tgggtggggffggggt',
+      'tgggggggggfggggt',
+      'tgtgggggggfggggt',
+      'tggggggggggggggt',
+      'tttttttttttttttt'
+    ],
+    ev: [
+      { x: 8, y: 0, step: true, script: [['warp', 'woods', 8, 11, 'up']] },
+      { x: 8, y: 2, step: true, cond: '!valleyRiko', script: 'valley_riko' },
+      { x: 10, y: 8, sprite: 'ooga', cond: '!valleyBoss', script: 'valley_boss' },
+      { x: 10, y: 10, sprite: 'grave', script: 'valley_grave' },
+      { x: 2, y: 3, gather: 'gekko' },
+      { x: 13, y: 6, gather: 'gekko' },
+      { x: 5, y: 9, gather: 'gekko' },
+      { x: 4, y: 1, gather: 'gekko' },
+      { x: 12, y: 2, gather: 'akami' },
+      { x: 3, y: 7, gather: 'akami' },
+      { x: 14, y: 10, sprite: 'chest', cond: '!chestValley', script: [['say', '', '薬草採りの忘れもの。'], ['give', 'kitsuke', 1], ['give', 'kizu', 2], ['flag', 'chestValley']] }
     ]
   }
 };

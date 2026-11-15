@@ -221,6 +221,10 @@
       '................', '................', '................', '.....bbbbbb.....', '...bbbbbbbbbb...', '..bbbabbbbabbb..',
       '..bbacabbacabb..', '.bbbbabbbbabbbb.', '.bbbbbbabbbbbbb.', '.bbabbacabbabbb.', '..bacabbabacabb.', '..bbabbbbbbabb..',
       '...bbbbbbbbbb...', '.....bbbbbb.....', '................', '................'] },
+    grave: { pal: { a: '#7a8078', b: '#565c56', c: '#a4aaa0', g: '#4c8a4a', f: '#f4f0d0' }, art: [
+      '................', '................', '.....aaaaaa.....', '....accccccb....', '....acaaaacb....', '....accaaccb....',
+      '....acaccacb....', '....acaaaacb....', '....accccccb....', '....acaaaacb....', '....acaaaacb....', '....accccccb....',
+      '...gabbbbbbbg...', '..ggbbbbbbbbgf..', '..gggggggggggg..', '................'] },
     chest: { pal: { a: '#8a5a2a', b: '#5a3a1a', c: '#e6c04a' }, art: [
       '................', '................', '................', '................', '..bbbbbbbbbbbb..', '.baaaaaaaaaaaab.',
       '.baaaaaaaaaaaab.', '.bccccccccccccb.', '.baaaaaccaaaaab.', '.baaaaaccaaaaab.', '.baaaaaaaaaaaab.', '.baaaaaaaaaaaab.',

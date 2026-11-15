@@ -7,7 +7,7 @@ var ctx = vm.createContext({ console: console, Math: Math });
 });
 var G = vm.runInContext('G', ctx), D = G.data, S = G.sprites;
 var KNOWN = ['say', 'nar', 'choice', 'if', 'call', 'flag', 'goal', 'give', 'take', 'gold', 'warp', 'fade', 'flash', 'wait',
-  'rest', 'join', 'leave', 'equip', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
+  'rest', 'join', 'leave', 'equip', 'ltalk', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
 var fails = 0;
 function test(name, fn) {
   var errs = [];
@@ -39,7 +39,8 @@ function allScripts(cb) {
   Object.keys(D.story).forEach(function (k) { walk(D.story[k], k, cb); });
   Object.keys(D.maps).forEach(function (m) {
     D.maps[m].ev.forEach(function (e) { if (e.script) walk(e.script, m + '(' + e.x + ',' + e.y + ')', cb); });
-  });
+  });  (D.lairTalks || []).forEach(function (t, i) { walk(t.script, '隠れ家の会話' + i, cb); });
+  (D.skyTalks || []).forEach(function (t, i) { walk(t, '姫の話' + i, cb); });
 }
 
 test('地図の行はすべて同じ幅で、知っている地形だけでできている', function (bad) {

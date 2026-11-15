@@ -67,6 +67,15 @@
         }
         break;
       }
+      case 'ltalk': {
+        // 隠れ家でのリコとの会話。1日（眠るまで）にひとつだけ進む
+        var lt = G.data.lairTalks[s.ltalks];
+        if (s.flags.riko && lt && s.stage >= lt.stage && s.ltalkDay !== s.rests) {
+          s.ltalks++; s.ltalkDay = s.rests;
+          await run(lt.script);
+        }
+        break;
+      }
       case 'brew': await G.menu.brew(); break;
       case 'shop': await G.menu.shop(c[1]); break;
       case 'sell': await G.menu.sell(); break;

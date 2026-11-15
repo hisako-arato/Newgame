@@ -224,8 +224,8 @@
 
   // 負けても終わらない。死ねないので、寝台で目を覚ます
   async function lose() {
-    var s = G.state, sky = !!s.flags.amelia;
-    await log(G.party().length > 1 ? 'ふたりとも倒れた……' : 'カインは倒れた……');
+    var s = G.state, sky = !!s.flags.amelia && !s.flags.riko;
+    await log(G.party().length > 2 ? 'みんな倒れた……' : G.party().length > 1 ? 'ふたりとも倒れた……' : 'カインは倒れた……');
     await G.ui.fade('out');
     $('battle').hidden = true;
     s.deaths++;

@@ -26,7 +26,9 @@ G.data.maps = {
       { x: 7, y: 3, obj: true, script: [['say', '', '飲みかけの薬草茶が冷めている。']] },
       { x: 4, y: 5, step: true, script: [['warp', 'town', 3, 17, 'right']] },
       // 弟子が加わる前の記録で遊んでいる人のため。新しく始めたときは、冒頭で仲間になる
-      { x: 6, y: 3, sprite: 'riko', cond: function (s) { return !!s.flags.metMaster && !s.flags.riko && !s.flags.kingDone; }, script: 'riko_join' }
+      { x: 6, y: 3, sprite: 'riko', cond: function (s) { return !!s.flags.metMaster && !s.flags.riko && !s.flags.kingDone; }, script: 'riko_join' },
+      { x: 6, y: 3, sprite: 'riko', cond: function (s) { return !!s.flags.war && !s.flags.rikoBack && !s.flags.kingDown; }, script: 'riko_reunion' },
+      { x: 6, y: 2, sprite: 'circle', cond: function (s) { return !!s.flags.war && !s.flags.kingDown; }, script: 'ascend' }
     ]
   },
 
@@ -87,7 +89,8 @@ G.data.maps = {
       { x: 4, y: 2, sprite: 'master', script: 'bar_master' },
       { x: 1, y: 4, sprite: 'drunk', script: 'bar_drunk' },
       { x: 7, y: 4, sprite: 'bard', cond: ST(1), script: 'bar_bard' },
-      { x: 2, y: 6, sprite: 'hanna', cond: ST(2), script: 'bar_hanna' },
+      { x: 2, y: 6, sprite: 'hanna', cond: function (s) { return s.stage >= 2 && s.stage !== 8 && !s.flags.war; }, script: 'bar_hanna' },
+      { x: 2, y: 6, sprite: 'gekko', cond: 'war', script: [['say', '', 'ハンナの席に、白い花が一輪、置いてある。']] },
       { x: 6, y: 4, sprite: 'liese', cond: 'lieseInBar', script: 'bar_liese' }
     ]
   },
@@ -196,10 +199,12 @@ G.data.maps = {
       ' lllxlllll ',
       ' lBlllllSl ',
       ' lllllllll ',
-      '           '
+      '     e     '
     ],
     ev: [
-      { x: 5, y: 2, sprite: 'amelia', cond: '!amelia', script: 'sky_princess' },
+      { x: 5, y: 2, sprite: 'amelia', cond: '!skyMet', script: 'sky_princess' },
+      { x: 5, y: 9, step: true, script: 'sky_south' },
+      { x: 4, y: 7, sprite: 'circle', cond: function (s) { return !!s.flags.war && !!s.flags.stakesDone && !s.flags.kingDown; }, script: 'descend' },
       { x: 5, y: 1, obj: true, script: 'throne' },
       { x: 2, y: 7, obj: true, script: 'bed' },
       { x: 8, y: 7, obj: true, script: [['say', '', '王家の薬棚。四百年たっても、調合の道具はそろっている。'], ['brew']] },
@@ -215,9 +220,9 @@ G.data.maps = {
 
   garden: {
     name: '空中庭園', dark: 0,
-    enc: { g: ['kurage', 'kurage', 'tori'] },
+    enc: { g: ['kurage', 'tori', 'kurage'] },
     rows: [
-      '                ',
+      '       e        ',
       ' llllllgggggxll ',
       ' lxgggggggtgggl ',
       ' lgggtgggggggxl ',
@@ -227,11 +232,13 @@ G.data.maps = {
       ' lgtgggggggtggl ',
       ' lxggggggggggll ',
       ' llllgggxggllll ',
-      '                '
+      '         e      '
     ],
     ev: [
       { x: 0, y: 5, step: true, script: [['warp', 'sky', 9, 5, 'left']] },
       { x: 14, y: 5, step: true, script: 'garden_east' },
+      { x: 7, y: 0, step: true, script: 'garden_north' },
+      { x: 9, y: 10, step: true, script: 'garden_south' },
       { x: 3, y: 2, gather: 'gekko' },
       { x: 12, y: 7, gather: 'gekko' },
       { x: 6, y: 8, gather: 'gekko' },

@@ -68,6 +68,7 @@
 
     mapName: function (t) {
       var e = $('mapname');
+      e.style.top = ($('hud').offsetHeight - 6) + 'px';
       e.textContent = t; e.classList.remove('show'); void e.offsetWidth; e.classList.add('show');
     },
 

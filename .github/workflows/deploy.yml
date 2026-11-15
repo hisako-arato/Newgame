@@ -1,4 +1,4 @@
-# main が変わったら、遊べる版（https://unjou-requiem.haruki-rog.workers.dev）を自動で更新する。
+# main が変わったら、遊べる版（https://unjou-requiem.haruki-atmark.workers.dev）を自動で更新する。
 # スマホ（クラウドの Claude）で直した分も、PC を開かずにスマホのアプリへ届けるため。
 #
 # GitHub の Secrets に CLOUDFLARE_API_TOKEN が要る（haitomoshibi と同じものでよい。手順は README）。

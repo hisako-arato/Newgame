@@ -5,7 +5,7 @@
 
 ## アプリとして入れる（スマホ）
 
-https://unjou-requiem.haruki-rog.workers.dev を開き、ブラウザのメニューから入れる。
+https://unjou-requiem.haruki-atmark.workers.dev を開き、ブラウザのメニューから入れる。
 
 - **Android（Chrome）**：︙ →「アプリをインストール」（または「ホーム画面に追加」）
 - **iPhone（Safari）**：共有ボタン →「ホーム画面に追加」
@@ -72,7 +72,7 @@ https://unjou-requiem.haruki-rog.workers.dev を開き、ブラウザのメニ�
 
 ## 公開のしかた（Cloudflare）
 
-`main` に push すると、GitHub Actions が `dist/` を Cloudflare に上げる（https://unjou-requiem.haruki-rog.workers.dev）。
+`main` に push すると、GitHub Actions が `dist/` を Cloudflare に上げる（https://unjou-requiem.haruki-atmark.workers.dev）。
 はじめに一度だけ、GitHub の Secrets に `CLOUDFLARE_API_TOKEN` を入れる。入っていないあいだは、検査だけして上げない。
 
 1. Cloudflare のダッシュボード（https://dash.cloudflare.com）→ 右上の人のアイコン → **My Profile** → **API Tokens** → **Create Token**

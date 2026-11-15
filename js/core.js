@@ -17,7 +17,8 @@ G.newState = function () {
     items: { kizu: 2, gekko: 2 },
     weapon: 'rusty', armor: 'coat',
     flags: {}, quests: {}, gathered: {},
-    ahp: 0, asp: 0,   // 仲間（アメリア）のHP・SP
+    ahp: 0, asp: 0, rhp: 0, rsp: 0,   // 仲間（アメリア・リコ）のHP・SP
+    auto: false,       // 仲間の行動をおまかせにするか
     stage: 0,          // 第一章の進み具合（酒場の夜が何回目まで進んだか）
     mem: [],           // 思い出した記憶
     dreams: 0, talks: 0,   // 見た夢・空で聞いた姫の話の数
@@ -35,22 +36,27 @@ G.stats = function () {
     def: 4 + 2 * l + it[s.armor].def
   };
 };
-// 仲間。レベルは主人公と共通にして、育てる手間を増やさない
-G.NAMES = { hero: 'カイン', amelia: 'アメリア' };
-G.party = function () { return G.state.flags.amelia ? ['hero', 'amelia'] : ['hero']; };
-G.statsOf = function (id) {
-  if (id !== 'amelia') return G.stats();
-  var l = G.state.lv - 1;
-  return { maxhp: 34 + 8 * l, maxsp: 20 + 6 * l, atk: 5 + 2 * l, def: 3 + 2 * l };
+// 仲間。レベルは主人公と共通にして、育てる手間を増やさない。
+// 足すときはこの表に書く（flag：仲間にいるあいだ立つ旗、hp・sp：記録に持つ名前、stats：レベルごとの強さ）
+G.NAMES = { hero: 'カイン', riko: 'リコ', amelia: 'アメリア' };
+G.MEMBERS = {
+  riko:   { hp: 'rhp', sp: 'rsp', stats: function (l) { return { maxhp: 30 + 7 * l, maxsp: 16 + 5 * l, atk: 4 + 2 * l, def: 3 + 2 * l }; } },
+  amelia: { hp: 'ahp', sp: 'asp', stats: function (l) { return { maxhp: 34 + 8 * l, maxsp: 20 + 6 * l, atk: 5 + 2 * l, def: 3 + 2 * l }; } }
 };
-G.hp = function (id) { return G.state[id === 'amelia' ? 'ahp' : 'hp']; };
-G.sp = function (id) { return G.state[id === 'amelia' ? 'asp' : 'sp']; };
+G.party = function () {
+  return ['hero'].concat(Object.keys(G.MEMBERS).filter(function (id) { return G.state.flags[id]; }));
+};
+G.statsOf = function (id) {
+  return G.MEMBERS[id] ? G.MEMBERS[id].stats(G.state.lv - 1) : G.stats();
+};
+G.hp = function (id) { return G.state[G.MEMBERS[id] ? G.MEMBERS[id].hp : 'hp']; };
+G.sp = function (id) { return G.state[G.MEMBERS[id] ? G.MEMBERS[id].sp : 'sp']; };
 G.addHp = function (id, n) {
-  var k = id === 'amelia' ? 'ahp' : 'hp';
+  var k = G.MEMBERS[id] ? G.MEMBERS[id].hp : 'hp';
   G.state[k] = G.util.clamp(G.state[k] + n, 0, G.statsOf(id).maxhp);
 };
 G.addSp = function (id, n) {
-  var k = id === 'amelia' ? 'asp' : 'sp';
+  var k = G.MEMBERS[id] ? G.MEMBERS[id].sp : 'sp';
   G.state[k] = G.util.clamp(G.state[k] + n, 0, G.statsOf(id).maxsp);
 };
 G.fullHeal = function () {

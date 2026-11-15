@@ -30,17 +30,22 @@
       if (!G.field.active || G.field.busy) return;
       G.field.run(async function () {
         for (;;) {
-          var opts = [{ label: 'つよさ' }, { label: 'もちもの' }, { label: '依頼' }, { label: 'きろくする' }, { label: '記憶', sub: '思い出したこと ' + G.state.mem.length + '/' + Object.keys(G.data.memories).length }];
+          var st = G.state;
+          var opts = [
+            { label: 'つよさ', run: G.menu.status },
+            { label: 'もちもの', run: G.menu.items },
+            { label: '依頼', run: G.menu.questLog },
+            { label: '記憶', sub: '思い出したこと ' + st.mem.length + '/' + Object.keys(G.data.memories).length, run: G.menu.memories },
+            // 仲間の行動を毎回選ぶのが手間なら、おまかせにできる（利用者の指定 2026-11-15）
+            { label: '仲間の行動：' + (st.auto ? 'おまかせ' : '自分で選ぶ'), sub: st.auto ? 'いまは仲間が自分で考えて動く。押すと、自分で選ぶ' : 'いまは戦闘のたびに選ぶ。押すと、おまかせにする',
+              run: function () { st.auto = !st.auto; } },
+            { label: 'きろくする', run: function () { return ui.say('', G.save() ? '記録した。（歩いているあいだも自動で記録されます）' : 'この端末では記録できなかった。'); } }
+          ];
           // 全画面にできる端末だけ、切り替えを出す
-          if (G.fullscreen.can()) opts.push({ label: G.fullscreen.on() ? '全画面をやめる' : '全画面にする' });
+          if (G.fullscreen.can()) opts.push({ label: G.fullscreen.on() ? '全画面をやめる' : '全画面にする', run: function () { G.fullscreen.toggle(); return 'close'; } });
           var i = await ui.list('メニュー', opts, { cancelLabel: 'とじる' });
           if (i < 0) return;
-          if (i === 0) await G.menu.status();
-          if (i === 1) await G.menu.items();
-          if (i === 2) await G.menu.questLog();
-          if (i === 4) await G.menu.memories();
-          if (i === 5) { G.fullscreen.toggle(); return; }
-          if (i === 3) await ui.say('', G.save() ? '記録した。（歩いているあいだも自動で記録されます）' : 'この端末では記録できなかった。');
+          if (await opts[i].run() === 'close') return;
         }
       });
     },
@@ -54,11 +59,12 @@
         '攻撃 ' + st.atk + '（' + IT(s.weapon).name + '）　守り ' + st.def + '（' + IT(s.armor).name + '）\n' +
         'わざ：' + sk + '\n' +
         '死ねなかった回数：' + s.deaths);
-      if (s.flags.amelia) {
-        var at = G.statsOf('amelia');
-        var ask = G.data.skills.filter(function (k) { return k.who === 'amelia' && k.lv <= s.lv; }).map(function (k) { return k.name; }).join('、');
-        await ui.say('アメリア',
-          'HP ' + s.ahp + '/' + at.maxhp + '　SP ' + s.asp + '/' + at.maxsp + '\n' +
+      var mates = G.party().slice(1);
+      for (var m = 0; m < mates.length; m++) {
+        var id = mates[m], at = G.statsOf(id);
+        var ask = G.data.skills.filter(function (k) { return k.who === id && k.lv <= s.lv; }).map(function (k) { return k.name; }).join('、');
+        await ui.say(G.NAMES[id],
+          'HP ' + G.hp(id) + '/' + at.maxhp + '　SP ' + G.sp(id) + '/' + at.maxsp + '\n' +
           '攻撃 ' + at.atk + '　守り ' + at.def + '\n' +
           'わざ：' + ask + '\n' +
           'レベルはカインと一緒に上がる。');

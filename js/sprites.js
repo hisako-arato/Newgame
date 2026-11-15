@@ -204,6 +204,7 @@
     hanna:       { H: '#e8e8ee', S: '#e0c0a8', E: '#222', C: '#7a5a7a', D: '#5a3f5a', B: '#3a2a20', L: '#e8e8ee' },
     smith:       { H: '#2a2a2a', S: '#c8966e', E: '#222', C: '#5a4a3a', D: '#3a3028', B: '#222' },
     mage:        { H: '#3a2a4a', S: '#e0b896', E: '#222', C: '#6a4a9a', D: '#4a3470', B: '#222', K: '#8a6ac4', L: '#6a4a9a' },
+    riko:        { H: '#d98a3a', S: '#f6d8bc', E: '#3a6a3a', C: '#5a9a6a', D: '#3a6a4a', B: '#5a3d24', L: '#d98a3a', K: '#e6c85a' },
     amelia:      { H: '#bfe0f4', S: '#fbe6d6', E: '#4a7ac4', C: '#f4f6fb', D: '#d8dde8', B: '#c2c8d6', L: '#bfe0f4' }
   };
   // 物のドット絵

@@ -246,10 +246,11 @@
 
       var list = F.events().filter(function (e) { return e.sprite || e.gather; })
         .map(function (e) { return { y: e.y * T, x: e.x * T, name: e.sprite || e.gather, dir: e.dir }; });
-      if (s.flags.amelia && F.tail) {
+      var mate = G.party()[1];
+      if (mate && F.tail) {
         // 歩いているあいだは、前の立ち位置から主人公のいたマスへ滑らせる
         var pf = m && m.pf ? m.pf : F.tail, k = m && m.pf ? m.t : 1;
-        list.push({ y: (pf.y + (F.tail.y - pf.y) * k) * T, x: (pf.x + (F.tail.x - pf.x) * k) * T, name: 'amelia', dir: F.tail.dir, frame: m ? (m.t < 0.5 ? 0 : 1) : 0 });
+        list.push({ y: (pf.y + (F.tail.y - pf.y) * k) * T, x: (pf.x + (F.tail.x - pf.x) * k) * T, name: mate, dir: F.tail.dir, frame: m ? (m.t < 0.5 ? 0 : 1) : 0 });
       }
       list.push({ y: hy, x: hx, name: 'hero', dir: s.dir, frame: m ? (m.t < 0.5 ? 1 : 0) : 0, hero: true });
       list.sort(function (a, b) { return a.y - b.y; });

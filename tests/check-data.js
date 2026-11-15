@@ -7,7 +7,7 @@ var ctx = vm.createContext({ console: console, Math: Math });
 });
 var G = vm.runInContext('G', ctx), D = G.data, S = G.sprites;
 var KNOWN = ['say', 'nar', 'choice', 'if', 'call', 'flag', 'goal', 'give', 'take', 'gold', 'warp', 'fade', 'flash', 'wait',
-  'rest', 'join', 'equip', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
+  'rest', 'join', 'leave', 'equip', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
 var fails = 0;
 function test(name, fn) {
   var errs = [];

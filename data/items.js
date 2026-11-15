@@ -54,7 +54,13 @@ G.data.skills = [
   { id: 'kabuto',    name: '兜割り',     lv: 3, sp: 5,  kind: 'break', rate: 1.5, desc: '強く斬り、相手の守りを下げる' },
   { id: 'iyashi',    name: '癒やしの水', lv: 4, sp: 6,  kind: 'heal', rate: 0.45, desc: 'HPを大きく回復する' },
   { id: 'issen',     name: '剣聖の一閃', lv: 6, sp: 10, kind: 'slash', rate: 2.5, desc: '四百年前の一太刀' },
-  // who があるものは仲間の技
+  // who があるものは仲間の技。リコは薬師の見習い：氷の魔法と、味方を助ける薬
+  { id: 'tsubute',   name: '氷のつぶて', who: 'riko', lv: 1, sp: 3, kind: 'magic', elem: 'ice', pow: 9, desc: '氷の魔法。狼やコウモリによく効く' },
+  { id: 'teate',     name: '応急手当',   who: 'riko', lv: 1, sp: 4, kind: 'heal', rate: 0.3, desc: 'ひとりのHPを回復する' },
+  { id: 'togi',      name: 'とぎ薬',     who: 'riko', lv: 3, sp: 5, kind: 'buff', desc: 'ひとりの攻撃を、しばらく上げる' },
+  { id: 'mamori',    name: 'まもりの香', who: 'riko', lv: 5, sp: 6, kind: 'shield', desc: 'みんなの受ける傷を、しばらく小さくする' },
+  { id: 'tsurara',   name: '氷柱の術',   who: 'riko', lv: 7, sp: 8, kind: 'magic', elem: 'ice', pow: 26, desc: '強い氷の魔法' },
+
   { id: 'ikazuchi',  name: '雷の矢',     who: 'amelia', lv: 1, sp: 4,  kind: 'magic', elem: 'thunder', pow: 16, desc: '雷の魔法。金属や鳥によく効く' },
   { id: 'megumi',    name: '恵みの雨',   who: 'amelia', lv: 1, sp: 5,  kind: 'heal', rate: 0.5, desc: 'ひとりのHPを大きく回復する' },
   { id: 'kiri',      name: '霧の衣',     who: 'amelia', lv: 5, sp: 6,  kind: 'weaken', desc: '霧で相手の目をくらませ、攻撃を弱める' },

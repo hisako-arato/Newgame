@@ -24,7 +24,9 @@ G.data.maps = {
       { x: 6, y: 1, obj: true, script: 'note3' },
       { x: 7, y: 1, obj: true, script: 'note4' },
       { x: 7, y: 3, obj: true, script: [['say', '', '飲みかけの薬草茶が冷めている。']] },
-      { x: 4, y: 5, step: true, script: [['warp', 'town', 3, 17, 'right']] }
+      { x: 4, y: 5, step: true, script: [['warp', 'town', 3, 17, 'right']] },
+      // 弟子が加わる前の記録で遊んでいる人のため。新しく始めたときは、冒頭で仲間になる
+      { x: 6, y: 3, sprite: 'riko', cond: function (s) { return !!s.flags.metMaster && !s.flags.riko && !s.flags.kingDone; }, script: 'riko_join' }
     ]
   },
 

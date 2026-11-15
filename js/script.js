@@ -54,6 +54,7 @@
         break;
       }
       case 'forge': await G.menu.forge(); break;
+      case 'leave': s.flags[c[1]] = false; ui.hud(); break;
       case 'join': s.flags[c[1]] = true; G.fullHeal(); ui.hud(); break;
       case 'dream': {
         // 地上では過去の夢を、空では姫の話を、物語が進んだぶんだけ順に見せる

@@ -70,7 +70,7 @@ G.data.monsters = {
     ]
   },
   koumori: {
-    name: '夜鳴きコウモリ', hp: 30, atk: 13, def: 4, exp: 14, gold: 9,
+    name: '夜鳴きコウモリ', hp: 30, atk: 13, def: 4, exp: 14, gold: 9, weak: 'ice',
     drops: [{ item: 'akami', rate: 0.35 }],
     pal: { a: '#4a3a6a', b: '#33264d', c: '#7a62a8', e: '#ffd23a', f: '#fff' },
     art: [
@@ -93,7 +93,7 @@ G.data.monsters = {
     ]
   },
   kage: {
-    name: '影狼', hp: 46, atk: 17, def: 6, exp: 24, gold: 15, charge: 0.25,
+    name: '影狼', hp: 46, atk: 17, def: 6, exp: 24, gold: 15, weak: 'ice', charge: 0.25,
     drops: [{ item: 'kiba', rate: 0.6 }],
     pal: { a: '#2b2f3f', b: '#1a1c28', c: '#4a5068', e: '#e23a3a', f: '#eee' },
     art: [
@@ -116,7 +116,7 @@ G.data.monsters = {
     ]
   },
   kuma: {
-    name: '雷喰らいの大熊', hp: 420, atk: 44, def: 12, exp: 320, gold: 300, weak: 'fire', charge: 0.3, boss: true,
+    name: '雷喰らいの大熊', hp: 620, atk: 58, def: 12, exp: 320, gold: 300, weak: 'fire', charge: 0.3, boss: true,
     drops: [{ item: 'kiba', rate: 1 }],
     pal: { a: '#5a3d2b', b: '#3d281b', c: '#8a6248', e: '#ffe14a', y: '#ffe14a', f: '#eee', k: '#111' },
     art: [
@@ -144,23 +144,23 @@ G.data.monsters = {
     pal: { a: '#3a3a2a', b: '#5a5a3a', c: '#2a2a1c', d: '#1c1c12', e: '#e23a3a', f: '#c8c88a' } },
   yuurei:  { name: '亡霊兵', like: 'yoroi', hp: 60, atk: 22, def: 10, exp: 32, gold: 20, weak: 'fire', drops: [{ item: 'kiba', rate: 0.2 }],
     pal: { a: '#9fb4c8', b: '#6f8498', c: '#dfeaf4', e: '#bff0ff', k: '#2a3440' } },
-  bantou:  { name: '番兵の亡霊', like: 'yoroi', hp: 210, atk: 28, def: 10, exp: 150, gold: 120, weak: 'fire', charge: 0.3, boss: true, drops: [],
+  bantou:  { name: '番兵の亡霊', like: 'yoroi', hp: 270, atk: 31, def: 10, exp: 150, gold: 120, weak: 'fire', charge: 0.3, boss: true, drops: [],
     pal: { a: '#b8c8e0', b: '#8094b0', c: '#f0f6ff', e: '#ffe14a', k: '#1c2430' } },
-  koge:    { name: '焦げ狼', like: 'kage', hp: 85, atk: 30, def: 10, exp: 48, gold: 26, charge: 0.2, drops: [{ item: 'kiba', rate: 0.5 }],
+  koge:    { name: '焦げ狼', like: 'kage', hp: 85, atk: 30, def: 10, exp: 48, gold: 26, weak: 'ice', charge: 0.2, drops: [{ item: 'kiba', rate: 0.5 }],
     pal: { a: '#5a3a2a', b: '#3a2418', c: '#8a5a3a', e: '#ffb040', f: '#eee' } },
   tokage:  { name: '雷晶亀', like: 'kame', hp: 70, atk: 26, def: 20, exp: 52, gold: 30, weak: 'fire', drops: [{ item: 'raisho', rate: 0.15 }],
     pal: { a: '#b89a2a', b: '#8a7018', c: '#f0d860', g: '#6a5a3a', h: '#4a3e28', e: '#111' } },
-  rairou:  { name: '雷狼', like: 'kage', hp: 300, atk: 33, def: 12, exp: 260, gold: 200, charge: 0.3, boss: true, drops: [{ item: 'raisho', rate: 1 }],
+  rairou:  { name: '雷狼', like: 'kage', hp: 440, atk: 42, def: 12, exp: 260, gold: 200, weak: 'ice', charge: 0.3, boss: true, drops: [{ item: 'raisho', rate: 1 }],
     pal: { a: '#e8c84a', b: '#a8841a', c: '#fff4b0', e: '#4ad0ff', f: '#fff' } },
   iwakui:  { name: '岩喰い', like: 'kame', hp: 110, atk: 32, def: 24, exp: 60, gold: 36, weak: 'fire', drops: [{ item: 'tetsu', rate: 0.3 }],
     pal: { a: '#5a5048', b: '#3c3630', c: '#7a7068', g: '#8a6a4a', h: '#5a4630', e: '#ffcf40' } },
-  doukutsu: { name: '洞窟コウモリ', like: 'koumori', hp: 70, atk: 30, def: 8, exp: 44, gold: 22, drops: [],
+  doukutsu: { name: '洞窟コウモリ', like: 'koumori', hp: 70, atk: 30, def: 8, exp: 44, gold: 22, weak: 'ice', drops: [],
     pal: { a: '#5a4a3a', b: '#3a2e24', c: '#8a7458', e: '#ff6040', f: '#fff' } },
   doro:    { name: '泥人形', like: 'numeri', hp: 120, atk: 36, def: 14, exp: 70, gold: 40, weak: 'fire', drops: [{ item: 'gekko', rate: 0.3 }],
     pal: { a: '#4a4030', b: '#6a5a40', c: '#5a4c38', d: '#3a3024', e: '#c8e06a', f: '#8a7a5a' } },
   dokutake: { name: '毒霧茸', like: 'numeri', hp: 95, atk: 34, def: 10, exp: 62, gold: 34, weak: 'fire', drops: [{ item: 'akami', rate: 0.3 }],
     pal: { a: '#5a2a7a', b: '#8a4ab0', c: '#d8d0e0', d: '#a89ab8', e: '#2a1a2a', f: '#d0ff60' } },
-  nushi:   { name: '沼の主', like: 'kame', hp: 460, atk: 42, def: 18, exp: 380, gold: 300, weak: 'fire', charge: 0.3, boss: true, drops: [],
+  nushi:   { name: '沼の主', like: 'kame', hp: 640, atk: 52, def: 18, exp: 380, gold: 300, weak: 'fire', charge: 0.3, boss: true, drops: [],
     pal: { a: '#3f5a4c', b: '#2c4038', c: '#6a8a74', g: '#7a8a4a', h: '#4f5c30', e: '#ff4040' } },
 
   // ---- 空（第二章）----

@@ -1,0 +1,72 @@
+// 第一章の夏〜冬と、空・地上の戦いで足した魔物。数値は想定レベルから決めてある
+// （ふつうの魔物：HP 14L+10・攻撃 3.6L+8／ボス：HP 70L−40・攻撃 5.2L+8。L は出会うころの想定レベル）
+Object.assign(G.data.monsters, {
+  // ---- 夏：海沿いの道・座礁船（L5〜6）----
+  hamagani: { name: '浜蟹', like: 'kame', hp: 87, atk: 28, def: 15, exp: 37, gold: 22, weak: 'ice', drops: [{ item: 'kiba', rate: 0.3 }], 
+    pal: { a: '#c85a3a', b: '#8a3a24', c: '#f09070', g: '#d87a50', h: '#a04a30', e: '#111' } },
+  umidori: { name: '海鳥', like: 'tori', hp: 87, atk: 28, def: 6, exp: 37, gold: 22, weak: 'thunder', drops: [{ item: 'akami', rate: 0.2 }], 
+    pal: { a: '#e8e8f0', b: '#a8a8b8', c: '#ffffff', e: '#222', k: '#e0903a' } },
+  funayurei: { name: '幽霊水夫', like: 'yoroi', hp: 94, atk: 30, def: 9, exp: 43, gold: 24, weak: 'fire', drops: [], 
+    pal: { a: '#7ab0a8', b: '#4a807a', c: '#c8f0e8', e: '#e8fff8', k: '#1c3430' } },
+  funekurage: { name: '船底くらげ', like: 'kurage', hp: 94, atk: 30, def: 5, exp: 43, gold: 24, weak: 'thunder', drops: [{ item: 'gekko', rate: 0.3 }], 
+    pal: { a: '#a8c8e8', b: '#5a8ac0', c: '#e8f4ff', e: '#1a2a5a' } },
+  senchou: { name: '沈んだ船長', like: 'yoroi', hp: 380, atk: 39, def: 10, exp: 210, gold: 240, weak: 'fire', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#4a807a', b: '#2a504c', c: '#a8e0d8', e: '#ff4040', k: '#102420' } },
+  // ---- 夏：ガラ鉱山の奥（L8）----
+  oyaiwa: { name: '岩喰いの親', like: 'kame', hp: 520, atk: 50, def: 20, exp: 347, gold: 320, weak: 'fire', charge: 0.3, boss: true, drops: [{ item: 'gin', rate: 1 }], 
+    pal: { a: '#4a4038', b: '#2c2620', c: '#8a7a68', g: '#a87a4a', h: '#6a4c2c', e: '#ff8a20' } },
+  // ---- 秋：東街道・学舎の地下書庫（L8〜9）----
+  sanzoku: { name: '山賊', person: 'drunk', hp: 129, atk: 39, def: 13, exp: 79, gold: 34, charge: 0.15, drops: [{ item: 'kizu', rate: 0.3 }] },
+  ogarasu: { name: '大鴉', like: 'tori', hp: 129, atk: 39, def: 9, exp: 79, gold: 34, weak: 'ice', drops: [{ item: 'akami', rate: 0.3 }], 
+    pal: { a: '#2a2a34', b: '#16161c', c: '#4a4a5a', e: '#ff4040', k: '#8a8a3a' } },
+  honkui: { name: '本喰い虫', like: 'numeri', hp: 136, atk: 40, def: 11, exp: 87, gold: 36, weak: 'fire', drops: [], 
+    pal: { a: '#8a7a5a', b: '#b8a880', c: '#e8dcc0', d: '#c0b090', e: '#2a1a0a', f: '#fff8e0' } },
+  shoyoroi: { name: '書庫の鎧', like: 'yoroi', hp: 136, atk: 40, def: 23, exp: 87, gold: 36, weak: 'thunder', drops: [], 
+    pal: { a: '#8a7a9a', b: '#5a4c6a', c: '#c8b8d8', e: '#c9a544', k: '#1c1626' } },
+  kinsho: { name: '禁書の番', like: 'bannin', hp: 590, atk: 55, def: 14, exp: 428, gold: 360, weak: 'thunder', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#7a6a8a', b: '#4a3e58', c: '#b8a8c8', e: '#ff60c0', g: '#c9a544' } },
+  // ---- 秋：古戦場（L10〜11）----
+  gaikotsu: { name: '骸の兵', like: 'yoroi', hp: 157, atk: 46, def: 19, exp: 116, gold: 42, weak: 'fire', drops: [{ item: 'kiba', rate: 0.3 }], 
+    pal: { a: '#c8c0a8', b: '#8a846c', c: '#f0ecd8', e: '#4ad0ff', k: '#2a2820' } },
+  onnen: { name: '戦場の怨念', like: 'kurage', hp: 157, atk: 46, def: 9, exp: 116, gold: 42, weak: 'thunder', drops: [], 
+    pal: { a: '#4a3a5a', b: '#2a1e38', c: '#7a6a8a', e: '#ff4040' } },
+  boushou: { name: '亡霊の将', person: 'shogun', hp: 730, atk: 65, def: 19, exp: 616, gold: 440, weak: 'fire', charge: 0.3, boss: true, drops: [] },
+  // ---- 冬：氷穴（L11〜12）----
+  koriokami: { name: '氷狼', like: 'kage', hp: 171, atk: 49, def: 16, exp: 136, gold: 46, weak: 'fire', charge: 0.2, drops: [{ item: 'kiba', rate: 0.5 }], 
+    pal: { a: '#c8e6f4', b: '#8ab8d0', c: '#ffffff', e: '#2a6ad0', f: '#fff' } },
+  hyoshogame: { name: '氷晶亀', like: 'kame', hp: 171, atk: 49, def: 34, exp: 136, gold: 46, weak: 'fire', drops: [], 
+    pal: { a: '#8ab8d0', b: '#5a8aa8', c: '#e8f6fc', g: '#a8d0e4', h: '#7aa8c0', e: '#111' } },
+  hyouou: { name: '氷穴の主', like: 'kuma', hp: 800, atk: 70, def: 19, exp: 722, gold: 480, weak: 'fire', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#c8e6f4', b: '#8ab8d0', c: '#ffffff', e: '#2a6ad0', y: '#e8f6fc', f: '#fff', k: '#1a3a5a' } },
+  // ---- 冬：雷の落ちた砦（L12〜13）----
+  raiyoroi: { name: '雷に打たれた鎧', like: 'yoroi', hp: 185, atk: 53, def: 30, exp: 159, gold: 50, weak: 'ice', drops: [{ item: 'raisho', rate: 0.2 }], 
+    pal: { a: '#5a5a3a', b: '#3a3a24', c: '#e8c84a', e: '#fff4b0', k: '#1c1c10' } },
+  kogegarasu: { name: '焦げ鴉', like: 'tori', hp: 185, atk: 53, def: 13, exp: 159, gold: 50, weak: 'ice', drops: [], 
+    pal: { a: '#4a3a2a', b: '#2a2018', c: '#8a6a4a', e: '#ffb040', k: '#e8c84a' } },
+  toridenushi: { name: '砦の番兵長', like: 'bannin', hp: 870, atk: 76, def: 23, exp: 837, gold: 520, weak: 'ice', charge: 0.3, boss: true, drops: [{ item: 'raisho', rate: 1 }], 
+    pal: { a: '#6a6a4a', b: '#44442c', c: '#e8c84a', e: '#fff4b0', g: '#ff8a20' } },
+  // ---- 冬：王都の地下水道・廃研究所（L13〜14）----
+  dobunezumi: { name: '水道ねずみ', like: 'kiba', hp: 199, atk: 57, def: 16, exp: 183, gold: 54, weak: 'ice', drops: [{ item: 'kiba', rate: 0.4 }], 
+    pal: { a: '#6a6a70', b: '#4a4a50', c: '#c08a90', e: '#ffd23a', f: '#fff', k: '#2a2a2e' } },
+  odei: { name: '汚泥', like: 'numeri', hp: 199, atk: 57, def: 18, exp: 183, gold: 54, weak: 'fire', drops: [], 
+    pal: { a: '#3a4a3a', b: '#4a5c44', c: '#2c3a2c', d: '#202a20', e: '#c8ff60', f: '#6a8a5a' } },
+  jikkentai: { name: '古い魔導人形', like: 'yoroi', hp: 206, atk: 58, def: 32, exp: 196, gold: 56, weak: 'thunder', drops: [], 
+    pal: { a: '#6a5a8a', b: '#44385c', c: '#b6a2ff', e: '#e9e2ff', k: '#1a1428' } },
+  jinban: { name: '転移陣の番人', like: 'bannin', hp: 940, atk: 81, def: 22, exp: 960, gold: 560, weak: 'thunder', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#5a4a8a', b: '#3a2e5c', c: '#b6a2ff', e: '#e9e2ff', g: '#b6a2ff' } },
+  // ---- 空：民の家々・水路・灯りの塔・墓所（L14〜16.5）----
+  yadokumo: { name: '宿り雲', like: 'kurage', hp: 213, atk: 60, def: 13, exp: 209, gold: 58, weak: 'fire', drops: [{ item: 'gekko', rate: 0.3 }], 
+    pal: { a: '#e8e8f0', b: '#b0b0c0', c: '#ffffff', e: '#5a5a7a' } },
+  mizunosei: { name: '涸れ水の精', like: 'numeri', hp: 220, atk: 62, def: 18, exp: 223, gold: 60, weak: 'thunder', drops: [], 
+    pal: { a: '#5a8ac0', b: '#8ab8e8', c: '#c8e0f8', d: '#a0c0e0', e: '#1a2a5a', f: '#ffffff' } },
+  suiroushi: { name: '水路の主', like: 'kame', hp: 1010, atk: 86, def: 31, exp: 1092, gold: 600, weak: 'thunder', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#5a8ac0', b: '#3a5a8a', c: '#c8e0f8', g: '#8ab8e8', h: '#5a8ac0', e: '#ffe14a' } },
+  higa: { name: '灯喰い蛾', like: 'koumori', hp: 227, atk: 64, def: 16, exp: 237, gold: 62, weak: 'ice', drops: [{ item: 'akami', rate: 0.3 }], 
+    pal: { a: '#e8c84a', b: '#a8841a', c: '#fff4b0', e: '#ff4040', f: '#fff' } },
+  higanushi: { name: '灯を呑んだ大蛾', like: 'koumori', hp: 1045, atk: 89, def: 20, exp: 1161, gold: 620, weak: 'ice', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#ff8a20', b: '#a84a10', c: '#ffe14a', e: '#ffffff', f: '#fff' } },
+  hakamori: { name: '墓守の像', like: 'bannin', hp: 1115, atk: 94, def: 29, exp: 1305, gold: 660, weak: 'thunder', charge: 0.3, boss: true, drops: [], 
+    pal: { a: '#c8cedb', b: '#8f97aa', c: '#f4f6fb', e: '#9fd0ee', g: '#9fd0ee' } },
+  // ---- 地上：魔導師団の本陣（L17.5）----
+  danchou: { name: '魔導師団長', person: 'danchou', hp: 1185, atk: 99, def: 25, exp: 1458, gold: 700, charge: 0.3, boss: true, drops: [] },
+});

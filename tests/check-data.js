@@ -2,12 +2,12 @@
 var fs = require('fs'), vm = require('vm'), path = require('path');
 var root = path.join(__dirname, '..');
 var ctx = vm.createContext({ console: console, Math: Math });
-['js/core.js', 'data/items.js', 'data/monsters.js', 'data/maps.js', 'data/story.js', 'js/sprites.js'].forEach(function (f) {
+['js/core.js', 'data/items.js', 'data/monsters.js', 'data/monsters2.js', 'data/maps.js', 'data/maps2.js', 'data/maps3.js', 'data/story.js', 'data/story2.js', 'data/story3.js', 'data/story4.js', 'js/sprites.js'].forEach(function (f) {
   vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 });
 var G = vm.runInContext('G', ctx), D = G.data, S = G.sprites;
 var KNOWN = ['say', 'nar', 'choice', 'if', 'call', 'flag', 'goal', 'give', 'take', 'gold', 'warp', 'fade', 'flash', 'wait',
-  'rest', 'join', 'leave', 'equip', 'ltalk', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
+  'rest', 'join', 'leave', 'equip', 'ltalk', 'pay', 'stage', 'setstage', 'memory', 'forge', 'dream', 'brew', 'shop', 'sell', 'quests', 'battle', 'end'];
 var fails = 0;
 function test(name, fn) {
   var errs = [];
@@ -129,7 +129,7 @@ test('どの地図も、入口から人・物・出口のすべてに歩いて�
   allScripts(function (c) { if (c[0] === 'warp' && D.maps[c[1]]) (arrive[c[1]] = arrive[c[1]] || []).push([c[2], c[3]]); });
   arrive.lair = (arrive.lair || []).concat([[4, 3]]);
   Object.keys(D.maps).forEach(function (m) {
-    var rows = D.maps[m].rows, W = rows[0].length, seen = {}, q = (arrive[m] || []).map(function (p) { return p[1] * W + p[0]; });
+    var rows = D.maps[m].rows, W = rows[0].length, seen = {}, all = (arrive[m] || []).map(function (p) { return p[1] * W + p[0]; }), q = all.slice(0, 1);
     var block = {};
     D.maps[m].ev.forEach(function (e) { if ((e.sprite || e.gather) && !e.cond) block[e.y * W + e.x] = 1; });
     q.forEach(function (n) { seen[n] = 1; });
@@ -141,6 +141,7 @@ test('どの地図も、入口から人・物・出口のすべてに歩いて�
         seen[n] = 1; q.push(n);
       });
     }
+    all.forEach(function (n) { if (!seen[n]) bad(m + ' の入口 (' + (n % W) + ',' + ((n - n % W) / W) + ') が、ほかの入口とつながっていない'); });
     D.maps[m].ev.forEach(function (e) {
       var ok = seen[e.y * W + e.x];
       // 通れない人・物は、となり（カウンター越しなら、その向こう）に立てればよい

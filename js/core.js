@@ -19,6 +19,7 @@ G.newState = function () {
     flags: {}, quests: {}, gathered: {},
     ahp: 0, asp: 0, rhp: 0, rsp: 0,   // 仲間（アメリア・リコ）のHP・SP
     auto: false,       // 仲間の行動をおまかせにするか
+    ver: 2,            // 記録の版。第一章を作り直したとき（2026-11-15）に段階の番号が変わった
     stage: 0,          // 第一章の進み具合（酒場の夜が何回目まで進んだか）
     mem: [],           // 思い出した記憶
     ltalks: 0, ltalkDay: -1,   // 隠れ家でのリコとの会話が何番目まで進んだか・最後に話した日
@@ -40,6 +41,10 @@ G.stats = function () {
 // 仲間。レベルは主人公と共通にして、育てる手間を増やさない。
 // 足すときはこの表に書く（flag：仲間にいるあいだ立つ旗、hp・sp：記録に持つ名前、stats：レベルごとの強さ）
 G.NAMES = { hero: 'カイン', riko: 'リコ', amelia: 'アメリア' };
+// 空の少女は、名乗るまで名前が分からない
+G.refreshNames = function () {
+  G.NAMES.amelia = G.state && G.state.flags.named ? 'アメリア' : '少女';
+};
 G.MEMBERS = {
   riko:   { hp: 'rhp', sp: 'rsp', stats: function (l) { return { maxhp: 30 + 7 * l, maxsp: 16 + 5 * l, atk: 4 + 2 * l, def: 3 + 2 * l }; } },
   amelia: { hp: 'ahp', sp: 'asp', stats: function (l) { return { maxhp: 34 + 8 * l, maxsp: 20 + 6 * l, atk: 5 + 2 * l, def: 3 + 2 * l }; } }
@@ -88,8 +93,22 @@ G.load = function () {
     var t = localStorage.getItem(G.SAVE_KEY);
     if (!t) return null;
     var s = JSON.parse(t), base = G.newState();
-    // 段階を持たない古い記録は、旗から段階を決める
-    if (s.stage === undefined && s.flags && s.flags.letter) { s.stage = 5; s.flags.n2 = s.flags.n3 = s.flags.n4 = true; }
+    var f = s.flags || (s.flags = {});
+    // 段階を持たない、いちばん古い記録
+    if (s.stage === undefined) s.stage = f.letter ? 5 : 0;
+    // 版1の記録（酒場の夜が5つだったころ）は、新しい段階の番号に付け替える。
+    // 済ませた夜より前の出来事は、済んだことにする（行き止まりを作らないため）
+    if (!s.ver) {
+      s.stage = [0, 1, 2, 4, 6, 10][Math.min(5, s.stage)];
+      if (s.stage >= 4) f.wreckDone = true;
+      if (s.stage >= 6) f.mineDone = f.shokoDone = f.bookRead = f.examDone = f.plainSeen = f.wreckBox = true;
+      if (s.stage >= 10) f.nireDone = f.nireTalk = f.chapelDone = f.senjoDone = f.flowerDone = f.hyouDone = f.torideDone = f.diaryRead = f.labBoss = f.labDone = true;
+      if (f.kingDone) f.sleepPotion = true;
+      if (f.rescued) f.chapelDone = true;
+      // 空にいた記録：姫とはもう名乗り合っている
+      if (f.amelia) f.named = f.skyMet = f.cityLit = true;
+      s.ver = 2;
+    }
     for (var k in base) if (s[k] === undefined) s[k] = base[k];
     return s;
   } catch (e) { return null; }

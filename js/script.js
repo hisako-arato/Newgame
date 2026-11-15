@@ -24,6 +24,7 @@
         s.gold += c[1]; ui.hud();
         await ui.say('', c[1] + 'G を受け取った。');
         break;
+      case 'pay': s.gold -= c[1]; ui.hud(); break;
       case 'warp': G.field.warp(c[1], c[2], c[3], c[4]); break;
       case 'fade': await ui.fade(c[1], c[2]); break;
       case 'flash': await ui.flash(); break;
@@ -58,10 +59,10 @@
       case 'join': s.flags[c[1]] = true; G.fullHeal(); ui.hud(); break;
       case 'dream': {
         // 地上では過去の夢を、空では姫の話を、物語が進んだぶんだけ順に見せる
-        if (s.flags.amelia) {
+        if (s.flags.amelia && s.flags.named) {
           var tk = G.data.skyTalks[s.talks];
           if (tk) { s.talks++; await run(tk); }
-        } else {
+        } else if (!s.flags.kingDone) {
           var d = G.data.dreams[s.dreams];
           if (d && s.stage >= d.stage) { s.dreams++; await ui.say('', d.text); }
         }

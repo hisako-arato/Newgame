@@ -58,7 +58,9 @@
     // だれかが危なければ回復
     var low = alive().filter(function (a) { return G.hp(a) < G.statsOf(a).maxhp * 0.45; })
       .sort(function (a, b) { return G.hp(a) / G.statsOf(a).maxhp - G.hp(b) / G.statsOf(b).maxhp; })[0];
-    if (low && by('heal').length) return { type: 'skill', skill: by('heal')[0], to: low };
+    var lows = alive().filter(function (a) { return G.hp(a) < G.statsOf(a).maxhp * 0.5; }).length;
+    if (lows >= 2 && by('healall').length) return { type: 'skill', skill: by('healall')[0] };
+    if (low && by('heal').length) return { type: 'skill', skill: by('heal').sort(function (a, b) { return b.rate - a.rate; })[0], to: low };
     // 強い相手には、先に備える（カインの攻撃を上げる・みんなを守る・相手を弱める）
     if (en.boss || en.max >= 150) {
       if (by('shield').length && !shield) return { type: 'skill', skill: by('shield')[0] };
@@ -135,6 +137,10 @@
         var v = Math.round(G.statsOf(to).maxhp * k.rate);
         G.addHp(to, v); bars();
         await log(N(to) + 'のHPが ' + v + ' 回復した。');
+      } else if (k.kind === 'healall') {
+        alive().forEach(function (m) { G.addHp(m, Math.round(G.statsOf(m).maxhp * k.rate)); });
+        bars();
+        await log('みんなのHPが回復した。');
       } else if (k.kind === 'buff') {
         var bt = G.hp(a.to) > 0 ? a.to : id;
         buff[bt] = 4; bars();

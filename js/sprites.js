@@ -10,7 +10,8 @@
     'g': { walk: true }, 'p': { walk: true }, 'f': { walk: true }, 'b': { walk: true }, 'D': { walk: true },
     'o': { walk: true }, 's': { walk: true }, 'U': { walk: true }, 'M': { walk: true }, 'c': { walk: true },
     'l': { walk: true }, 'e': { walk: true }, 'A': { walk: false },
-    'z': { walk: true }, 'r': { walk: false }, 'P': { walk: false }, 'm': { walk: true }
+    'z': { walk: true }, 'r': { walk: false }, 'P': { walk: false }, 'm': { walk: true },
+    'y': { walk: true }, 'i': { walk: true }
   };
 
   // 同じマスはいつも同じ模様になるよう、座標から乱数を作る
@@ -128,6 +129,16 @@
         specks(c, ox, oy, tx, ty, ['#c2c8d6', '#eef1f7', '#b4bccc'], 8);
         if (rnd(tx, ty, 5) > 0.7) rect(c, '#a9b2c4', ox + 3, oy + 8, 9, 1);
         break;
+      case 'y':
+        // 砂浜
+        rect(c, '#d8c690', ox, oy, T, T);
+        specks(c, ox, oy, tx, ty, ['#c4b078', '#e8d8a8', '#b8a468'], 7); break;
+      case 'i':
+        // 氷の床
+        rect(c, '#a8d0e4', ox, oy, T, T);
+        specks(c, ox, oy, tx, ty, ['#c8e6f4', '#8ab8d0', '#e8f6fc'], 6);
+        if (rnd(tx, ty, 7) > 0.6) rect(c, '#e8f6fc', ox + 3 + Math.floor(rnd(tx, ty, 8) * 6), oy + 5, 5, 1);
+        break;
       case 'z':
         // 雷で焼けた土
         rect(c, '#4a4038', ox, oy, T, T);
@@ -203,6 +214,13 @@
     bard:        { H: '#7ac0a0', S: '#f0cfae', E: '#2a5a4a', C: '#3a6a8a', D: '#2a4a5a', B: '#3a2a20', K: '#c9a544' },
     hanna:       { H: '#e8e8ee', S: '#e0c0a8', E: '#222', C: '#7a5a7a', D: '#5a3f5a', B: '#3a2a20', L: '#e8e8ee' },
     smith:       { H: '#2a2a2a', S: '#c8966e', E: '#222', C: '#5a4a3a', D: '#3a3028', B: '#222' },
+    sailor:      { H: '#2a3a5a', S: '#c89a70', E: '#222', C: '#e8e8e0', D: '#3a4a6a', B: '#222', K: '#3a4a6a' },
+    miner:       { H: '#5a4a3a', S: '#c8966e', E: '#222', C: '#8a6a3a', D: '#4a3a2a', B: '#222', K: '#e8c84a' },
+    professor:   { H: '#d8d8d8', S: '#e0c0a8', E: '#222', C: '#3a3050', D: '#2a2238', B: '#222', L: '#d8d8d8' },
+    elder:       { H: '#c8c8c8', S: '#d8b090', E: '#222', C: '#7a6a4a', D: '#5a4c36', B: '#3a2a20' },
+    sick:        { H: '#6a5a4a', S: '#c8c0a8', E: '#555', C: '#9a9a8a', D: '#7a7a6c', B: '#555' },
+    shogun:      { H: '#3a3a44', S: '#9fb4c8', E: '#bff0ff', C: '#5a6278', D: '#3a4050', B: '#22262e', K: '#c9a544' },
+    danchou:     { H: '#e8e8f0', S: '#e0b896', E: '#222', C: '#4a2a7a', D: '#341c58', B: '#222', K: '#c9a544', L: '#4a2a7a' },
     mage:        { H: '#3a2a4a', S: '#e0b896', E: '#222', C: '#6a4a9a', D: '#4a3470', B: '#222', K: '#8a6ac4', L: '#6a4a9a' },
     riko:        { H: '#d98a3a', S: '#f6d8bc', E: '#3a6a3a', C: '#5a9a6a', D: '#3a6a4a', B: '#5a3d24', L: '#d98a3a', K: '#e6c85a' },
     amelia:      { H: '#bfe0f4', S: '#fbe6d6', E: '#4a7ac4', C: '#f4f6fb', D: '#d8dde8', B: '#c2c8d6', L: '#bfe0f4' }
@@ -242,6 +260,14 @@
       '.....caab.cca...', '....ccaab.caa...', '....caaabccaab..', '...ccaaabcaaab..', '..ccaaaabaaaabb.', '..caaaaabaaaabb.',
       '.caaabaaaaabaab.', '.aaabbaaabbbaab.', 'aabbbbbbbbbbbbbb', '................'] }
   };
+
+  // 形は同じで色だけ違う物
+  THINGS.hyoshoka = { pal: { a: '#e8f6fc', b: '#8ab8d0', c: '#ffffff' }, art: THINGS.gekko.art };
+  THINGS.koke = { pal: { a: '#c8ff9a', b: '#3f7a4a', c: '#f0ffd8' }, art: THINGS.akami.art };
+  THINGS.circle = { pal: { a: '#b6a2ff', b: '#7a62d8', c: '#e9e2ff' }, art: [
+    '................', '................', '.....aaaaaa.....', '...aab....baa...', '..ab...cc...ba..', '..a...c..c...a..',
+    '.ab..c.aa.c..ba.', '.a..c.a..a.c..a.', '.a..c.a..a.c..a.', '.ab..c.aa.c..ba.', '..a...c..c...a..', '..ab...cc...ba..',
+    '...aab....baa...', '.....aaaaaa.....', '................', '................'] };
 
   function paint(c, art, pal, ox, oy, sc, flip) {
     for (var y = 0; y < art.length; y++) {

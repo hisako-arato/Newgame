@@ -116,7 +116,7 @@ G.data.monsters = {
     ]
   },
   kuma: {
-    name: '雷喰らいの大熊', hp: 620, atk: 58, def: 12, exp: 320, gold: 300, weak: 'fire', charge: 0.3, boss: true,
+    name: '雷喰らいの大熊', hp: 870, atk: 76, def: 17, exp: 837, gold: 520, weak: 'fire', charge: 0.3, boss: true,
     drops: [{ item: 'kiba', rate: 1 }],
     pal: { a: '#5a3d2b', b: '#3d281b', c: '#8a6248', e: '#ffe14a', y: '#ffe14a', f: '#eee', k: '#111' },
     art: [
@@ -158,20 +158,20 @@ G.data.monsters = {
     pal: { a: '#b89a2a', b: '#8a7018', c: '#f0d860', g: '#6a5a3a', h: '#4a3e28', e: '#111' } },
   rairou:  { name: '雷狼', like: 'kage', hp: 440, atk: 42, def: 12, exp: 260, gold: 200, weak: 'ice', charge: 0.3, boss: true, drops: [{ item: 'raisho', rate: 1 }],
     pal: { a: '#e8c84a', b: '#a8841a', c: '#fff4b0', e: '#4ad0ff', f: '#fff' } },
-  iwakui:  { name: '岩喰い', like: 'kame', hp: 110, atk: 32, def: 24, exp: 60, gold: 36, weak: 'fire', drops: [{ item: 'tetsu', rate: 0.3 }],
+  iwakui:  { name: '岩喰い', like: 'kame', hp: 115, atk: 35, def: 22, exp: 63, gold: 30, weak: 'fire', drops: [{ item: 'tetsu', rate: 0.3 }],
     pal: { a: '#5a5048', b: '#3c3630', c: '#7a7068', g: '#8a6a4a', h: '#5a4630', e: '#ffcf40' } },
-  doukutsu: { name: '洞窟コウモリ', like: 'koumori', hp: 70, atk: 30, def: 8, exp: 44, gold: 22, weak: 'ice', drops: [],
+  doukutsu: { name: '洞窟コウモリ', like: 'koumori', hp: 115, atk: 35, def: 8, exp: 63, gold: 30, weak: 'ice', drops: [],
     pal: { a: '#5a4a3a', b: '#3a2e24', c: '#8a7458', e: '#ff6040', f: '#fff' } },
-  doro:    { name: '泥人形', like: 'numeri', hp: 120, atk: 36, def: 14, exp: 70, gold: 40, weak: 'fire', drops: [{ item: 'gekko', rate: 0.3 }],
+  doro:    { name: '泥人形', like: 'numeri', hp: 143, atk: 42, def: 14, exp: 96, gold: 38, weak: 'fire', drops: [{ item: 'gekko', rate: 0.3 }],
     pal: { a: '#4a4030', b: '#6a5a40', c: '#5a4c38', d: '#3a3024', e: '#c8e06a', f: '#8a7a5a' } },
-  dokutake: { name: '毒霧茸', like: 'numeri', hp: 95, atk: 34, def: 10, exp: 62, gold: 34, weak: 'fire', drops: [{ item: 'akami', rate: 0.3 }],
+  dokutake: { name: '毒霧茸', like: 'numeri', hp: 143, atk: 42, def: 10, exp: 96, gold: 38, weak: 'fire', drops: [{ item: 'akami', rate: 0.3 }],
     pal: { a: '#5a2a7a', b: '#8a4ab0', c: '#d8d0e0', d: '#a89ab8', e: '#2a1a2a', f: '#d0ff60' } },
-  nushi:   { name: '沼の主', like: 'kame', hp: 640, atk: 52, def: 18, exp: 380, gold: 300, weak: 'fire', charge: 0.3, boss: true, drops: [],
+  nushi:   { name: '沼の主', like: 'kame', hp: 660, atk: 60, def: 19, exp: 518, gold: 400, weak: 'fire', charge: 0.3, boss: true, drops: [],
     pal: { a: '#3f5a4c', b: '#2c4038', c: '#6a8a74', g: '#7a8a4a', h: '#4f5c30', e: '#ff4040' } },
 
   // ---- 空（第二章）----
   kurage: {
-    name: '雲くらげ', hp: 130, atk: 44, def: 10, exp: 90, gold: 14, weak: 'fire',
+    name: '雲くらげ', hp: 220, atk: 62, def: 16, exp: 223, gold: 60, weak: 'fire',
     drops: [{ item: 'gekko', rate: 0.4 }],
     pal: { a: '#cfe6f7', b: '#8fbfe0', c: '#f4fbff', e: '#2a3a6a' },
     art: [
@@ -194,7 +194,7 @@ G.data.monsters = {
     ]
   },
   tori: {
-    name: '風喰い鳥', hp: 150, atk: 48, def: 12, exp: 100, gold: 18, weak: 'thunder', charge: 0.2,
+    name: '風喰い鳥', hp: 220, atk: 62, def: 20, exp: 223, gold: 60, weak: 'thunder', charge: 0.2,
     drops: [{ item: 'akami', rate: 0.4 }],
     pal: { a: '#6a8a9a', b: '#48606e', c: '#d8e6ee', e: '#ffcf40', k: '#e0903a' },
     art: [
@@ -217,7 +217,7 @@ G.data.monsters = {
     ]
   },
   yoroi: {
-    name: 'さまよう甲冑', hp: 200, atk: 52, def: 24, exp: 130, gold: 30, weak: 'thunder',
+    name: 'さまよう甲冑', hp: 234, atk: 66, def: 38, exp: 251, gold: 64, weak: 'thunder',
     drops: [{ item: 'kiba', rate: 0.3 }],
     pal: { a: '#8a93a8', b: '#5a6278', c: '#c4ccdc', e: '#6ad0ff', k: '#20242e' },
     art: [
@@ -240,7 +240,7 @@ G.data.monsters = {
     ]
   },
   bannin: {
-    name: '書庫の番人', hp: 800, atk: 56, def: 20, exp: 500, gold: 0, weak: 'thunder', charge: 0.3, boss: true,
+    name: '書庫の番人', hp: 1080, atk: 91, def: 26, exp: 1232, gold: 0, weak: 'thunder', charge: 0.3, boss: true,
     drops: [],
     pal: { a: '#9aa0ae', b: '#6b7180', c: '#c8cedb', e: '#7ae0ff', g: '#c9a544' },
     art: [
@@ -264,8 +264,8 @@ G.data.monsters = {
   },
 
   // ---- 地上の軍（第三章）。person は歩く画面と同じ人の絵を使う ----
-  hei:   { name: 'ガルド兵', person: 'guard', hp: 220, atk: 56, def: 20, exp: 150, gold: 40, charge: 0.15, drops: [{ item: 'kizu', rate: 0.5 }] },
-  madou: { name: '魔導兵',   person: 'mage',  hp: 180, atk: 62, def: 12,  exp: 160, gold: 50, drops: [{ item: 'kitsuke', rate: 0.5 }] },
-  liese: { name: '騎士リーゼ', person: 'liese', hp: 1000, atk: 64, def: 24, exp: 600, gold: 0, charge: 0.3, boss: true, drops: [] },
-  ou:    { name: 'ガルド王', person: 'king', hp: 1400, atk: 68, def: 26, exp: 0, gold: 0, weak: 'thunder', charge: 0.3, boss: true, drops: [] }
+  hei:   { name: 'ガルド兵', person: 'guard', hp: 248, atk: 69, def: 33, exp: 282, gold: 68, charge: 0.15, drops: [{ item: 'kizu', rate: 0.5 }] },
+  madou: { name: '魔導兵',   person: 'mage',  hp: 248, atk: 69, def: 18,  exp: 282, gold: 68, drops: [{ item: 'kitsuke', rate: 0.5 }] },
+  liese: { name: '騎士リーゼ', person: 'liese', hp: 1220, atk: 102, def: 32, exp: 1537, gold: 0, charge: 0.3, boss: true, drops: [] },
+  ou:    { name: 'ガルド王', person: 'king', hp: 1290, atk: 107, def: 33, exp: 0, gold: 0, weak: 'thunder', charge: 0.3, boss: true, drops: [] }
 };

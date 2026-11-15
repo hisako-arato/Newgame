@@ -73,6 +73,7 @@
 
     hud: function () {
       var s = G.state; if (!s) return;
+      G.refreshNames();
       $('goal').textContent = s.goal ? '目的：' + s.goal : '';
       $('stat').textContent = 'Lv' + s.lv + '　' + s.gold + 'G\n' + G.party().map(function (id) {
         var t = G.statsOf(id);

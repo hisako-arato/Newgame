@@ -2,8 +2,9 @@
 G.data.items = {
   kizu:    { name: '傷薬',       type: 'potion', heal: 40,  price: 30, sell: 22, desc: 'HPを40回復する' },
   jou:     { name: '上等な傷薬', type: 'potion', heal: 110, price: 95, sell: 60, desc: 'HPを110回復する' },
-  kitsuke: { name: '気つけ薬',   type: 'potion', sp: 15,   sell: 35, desc: 'SPを15回復する' },
-  kaen:    { name: '火炎瓶',     type: 'bomb',   dmg: 45, elem: 'fire', sell: 40, desc: '戦闘中に投げる。炎で45前後のダメージ' },
+  kitsuke: { name: '気つけ薬',   type: 'potion', sp: 15, price: 60, sell: 35, desc: 'SPを15回復する' },
+  tokujou: { name: '特上の傷薬', type: 'potion', heal: 240, price: 220, sell: 120, desc: 'HPを240回復する' },
+  kaen:    { name: '火炎瓶',     type: 'bomb',   dmg: 45, elem: 'fire', price: 70, sell: 40, desc: '戦闘中に投げる。炎で45前後のダメージ' },
   gekko:   { name: '月光草',     type: 'mat', sell: 5,  desc: '夜にだけ葉をひらく薬草' },
   akami:   { name: '赤い実',     type: 'mat', sell: 8,  desc: '森になる、舌がしびれる実' },
   kiba:    { name: '魔物の牙',   type: 'mat', sell: 10, desc: '砕いて薬に混ぜる' },
@@ -11,16 +12,21 @@ G.data.items = {
   nemurigusuri: { name: '眠り薬', type: 'mat', desc: 'ハンナ婆さんに頼まれた薬' },
   raisho:  { name: '雷晶',       type: 'mat', sell: 30, desc: '雷が落ちた土にできる石' },
   tetsu:   { name: '鉄鉱石',     type: 'mat', sell: 15, desc: '鍛冶屋で剣や鎧になる' },
+  shio:    { name: '潮の結晶',   type: 'mat', desc: '港の酒と薬に使う。バロウに頼まれた荷' },
+  hyoshoka: { name: '氷晶花',    type: 'mat', desc: '氷穴の奥にだけ咲く花' },
+  koke:    { name: '光苔',       type: 'mat', desc: '沈んだ礼拝堂の壁に生える、光る苔' },
   gin:     { name: '銀鉱石',     type: 'mat', sell: 40, desc: '鉱山の奥で採れる。鍛冶屋で剣になる' },
   rusty:   { name: 'さびた剣',   type: 'weapon', atk: 2 },
   iron:    { name: '鉄の剣',     type: 'weapon', atk: 8,  price: 180 },
   silver:  { name: '銀の剣',     type: 'weapon', atk: 14, price: 480 },
-  kishi:   { name: '騎士の剣',   type: 'weapon', atk: 18 },
+  kokuyo:  { name: '黒曜の剣',   type: 'weapon', atk: 28, price: 1400 },
+  kishi:   { name: '王国騎士の剣', type: 'weapon', atk: 34 },
   raiken:  { name: '雷晶の剣',   type: 'weapon', atk: 22 },
   coat:    { name: '古びた外套', type: 'armor', def: 1 },
   leather: { name: '革の胸当て', type: 'armor', def: 5,  price: 150 },
   mail:    { name: '鎖かたびら', type: 'armor', def: 10, price: 420 },
-  hagane:  { name: '鋼の鎧',     type: 'armor', def: 15 }
+  hagane:  { name: '鋼の鎧',     type: 'armor', def: 15 },
+  ryurin:  { name: '竜鱗の鎧',   type: 'armor', def: 22, price: 1200 }
 };
 
 // 大釜で作れる薬
@@ -29,6 +35,7 @@ G.data.recipes = [
   { out: 'kitsuke', need: { akami: 2 } },
   { out: 'jou',     need: { gekko: 2, kiba: 1 } },
   { out: 'kaen',    need: { akami: 1, kiba: 1 } },
+  { out: 'tokujou', need: { gekko: 3, akami: 1, kiba: 1 }, cond: function (s) { return !!s.flags.nireDone; } },
   { out: 'nemurigusuri', need: { nemuri: 1, gekko: 1 }, cond: function (s) { return s.stage === 2 && !s.items.nemurigusuri; } }
 ];
 
@@ -44,7 +51,10 @@ G.data.forge = [
 // 店の品ぞろえ
 G.data.shops = {
   stall: ['kizu', 'iron', 'leather'],
-  capital: ['kizu', 'jou', 'silver', 'mail']
+  salbe: ['kizu', 'jou', 'kaen', 'leather'],
+  rume: ['jou', 'kitsuke', 'kaen', 'mail'],
+  border: ['jou', 'tokujou', 'kitsuke', 'kokuyo', 'ryurin'],
+  capital: ['jou', 'tokujou', 'kitsuke', 'silver', 'mail']
 };
 
 // 技と魔法。lv はそのレベルで「思い出す」
@@ -54,15 +64,21 @@ G.data.skills = [
   { id: 'kabuto',    name: '兜割り',     lv: 3, sp: 5,  kind: 'break', rate: 1.5, desc: '強く斬り、相手の守りを下げる' },
   { id: 'iyashi',    name: '癒やしの水', lv: 4, sp: 6,  kind: 'heal', rate: 0.45, desc: 'HPを大きく回復する' },
   { id: 'issen',     name: '無銘の一閃', lv: 6, sp: 10, kind: 'slash', rate: 2.5, desc: '身体が覚えていた一太刀' },
+  { id: 'tsubame',   name: '三連斬り',   lv: 10, sp: 12, kind: 'multi', hits: 3, rate: 0.85, desc: 'つづけざまに三度斬る' },
+  { id: 'kumotachi', name: '雲断ち',     lv: 14, sp: 16, kind: 'slash', rate: 3.4, desc: '雲ごと斬る、と言われた太刀筋' },
   // who があるものは仲間の技。リコは薬師の見習い：氷の魔法と、味方を助ける薬
   { id: 'tsubute',   name: '氷のつぶて', who: 'riko', lv: 1, sp: 3, kind: 'magic', elem: 'ice', pow: 9, desc: '氷の魔法。狼やコウモリによく効く' },
   { id: 'teate',     name: '応急手当',   who: 'riko', lv: 1, sp: 4, kind: 'heal', rate: 0.3, desc: 'ひとりのHPを回復する' },
   { id: 'togi',      name: 'とぎ薬',     who: 'riko', lv: 3, sp: 5, kind: 'buff', desc: 'ひとりの攻撃を、しばらく上げる' },
   { id: 'mamori',    name: 'まもりの香', who: 'riko', lv: 5, sp: 6, kind: 'shield', desc: 'みんなの受ける傷を、しばらく小さくする' },
   { id: 'tsurara',   name: '氷柱の術',   who: 'riko', lv: 7, sp: 8, kind: 'magic', elem: 'ice', pow: 26, desc: '強い氷の魔法' },
+  { id: 'bannou',    name: '万能薬',     who: 'riko', lv: 10, sp: 9, kind: 'heal', rate: 0.6, desc: 'ひとりのHPを大きく回復する。リコが自分で考えた配合' },
+  { id: 'shimo',     name: '霜の檻',     who: 'riko', lv: 12, sp: 12, kind: 'magic', elem: 'ice', pow: 50, desc: 'とても強い氷の魔法' },
 
   { id: 'ikazuchi',  name: '雷の矢',     who: 'amelia', lv: 1, sp: 4,  kind: 'magic', elem: 'thunder', pow: 16, desc: '雷の魔法。金属や鳥によく効く' },
   { id: 'megumi',    name: '恵みの雨',   who: 'amelia', lv: 1, sp: 5,  kind: 'heal', rate: 0.5, desc: 'ひとりのHPを大きく回復する' },
   { id: 'kiri',      name: '霧の衣',     who: 'amelia', lv: 5, sp: 6,  kind: 'weaken', desc: '霧で相手の目をくらませ、攻撃を弱める' },
-  { id: 'kaminari',  name: '神鳴り',     who: 'amelia', lv: 8, sp: 12, kind: 'magic', elem: 'thunder', pow: 42, desc: '王家の雷。地上が「神の怒り」と呼んだもの' }
+  { id: 'kaminari',  name: '神鳴り',     who: 'amelia', lv: 8, sp: 12, kind: 'magic', elem: 'thunder', pow: 42, desc: '空から落とす、強い雷' },
+  { id: 'jiu',       name: '慈雨',       who: 'amelia', lv: 15, sp: 14, kind: 'healall', rate: 0.4, desc: 'やさしい雨で、みんなのHPを回復する' },
+  { id: 'tenrai',    name: '天雷',       who: 'amelia', lv: 17, sp: 18, kind: 'magic', elem: 'thunder', pow: 75, desc: 'いちばん強い雷' }
 ];
